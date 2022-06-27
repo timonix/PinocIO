@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     facit_arr = []
     for i, image in enumerate(tqdm(facit_dict)):
-        facit_arr.append(facit_dict["Images/image" + str(i) + ".png"])
+        facit_arr.append(facit_dict["Train Images/image" + str(i) + ".png"])
 
     facit = np.stack(facit_arr)
     facit_chunks = np.array_split(facit, num_chunks)
