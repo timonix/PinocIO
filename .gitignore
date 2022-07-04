@@ -134,4 +134,7 @@ dmypy.json
 /Noc Testing/model.m
 /Noc Testing/Images.7z
 /Noc Testing/facit.json
-/Noc Testing/Images/
+/Noc Testing/Test Images/*
+/Noc Testing/Train Images/*
+
+
