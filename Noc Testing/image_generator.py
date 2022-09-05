@@ -59,7 +59,6 @@ def generate_test_dataset(num_images):
 def generate_image():
 
     screen = pg.Surface(size)
-    facit_data = dict()
 
     screen.fill(black)
 
