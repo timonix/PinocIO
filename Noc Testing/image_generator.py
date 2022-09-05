@@ -27,7 +27,7 @@ def generate_train_dataset(num_images):
 
     facit_data = dict()
 
-    for i in range(num_images):
+    for i in tqdm(range(num_images, desc="Generating train images")):
         screen, ai_position_x, ai_position_y, ai_radius = generate_image()
         file_name = directory + file_name_base + str(i) + file_type
         pg.image.save(screen, file_name)
@@ -45,7 +45,7 @@ def generate_test_dataset(num_images):
 
     facit_data = dict()
 
-    for i in range(num_images):
+    for i in tqdm(range(num_images, desc="Generating test images")):
 
         screen, ai_position_x, ai_position_y, ai_radius = generate_image()
         file_name = directory + file_name_base + str(i) + file_type
@@ -81,4 +81,5 @@ def generate_image():
     return screen, ai_position_x, ai_position_y, ai_radius
 
 
-generate_train_dataset(100)
+#generate_train_dataset(10000)
+generate_test_dataset(1000)
