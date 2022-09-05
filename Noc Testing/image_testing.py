@@ -1,14 +1,10 @@
-from PIL import Image
-import numpy as np
-import image_generator
+import glob
+import os
 
 
+rootDir = '.'
 
-
-#img1 = Image.open("Train Images\\train_image0.png")
-#img1.show()
-#arr = np.asarray(img1)
-#img2 = Image.fromarray(arr)
-#img2.show()
-
-
+for dirName, subDirlist, fileList in os.walk(rootDir):
+    print(dirName)
+    print(subDirlist)
+    print(fileList)

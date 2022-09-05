@@ -9,12 +9,14 @@ from torch import nn
 
 from template_AI.network_collection import Encoder_B as Encoder
 from template_AI.network_collection import Decoder_B as Decoder
+from image_generator import generate_train_dataset
 
 import glob
+import tqdm as tqdm
 
-filelist = glob.glob('../Noc Testing/Train Images/*.png')
+filelist = glob.glob('../Train Images/*.png')
 
-print(filelist)
+#print(filelist)
 
 image_channels = 3
 encoder_base_size = 32
@@ -31,6 +33,7 @@ decoder = Decoder(image_channels, decoder_base_size, latent_dim, 300*200).to(dev
 criterion = nn.MSELoss()
 
 if __name__ == "__main__":
+
     # x = np.array([np.array(Image.open(fname)) for fname in filelist])
     # x = np.swapaxes(x, 1, 3)
     # x = x[-1:]
@@ -42,6 +45,8 @@ if __name__ == "__main__":
 
     optimizer_en = optim.SGD(encoder.parameters(), lr=learning_rate)
     optimizer_de = optim.SGD(decoder.parameters(), lr=learning_rate)
+
+    generate_train_dataset(10)
 
     x = np.array([np.array(Image.open(fname)) for fname in filelist])
     x = np.swapaxes(x, 1, 3)
@@ -71,7 +76,6 @@ if __name__ == "__main__":
 
         optimizer_en.step()
         optimizer_de.step()
-
 
         pass
 

@@ -19,41 +19,42 @@ max_radius = 20
 
 def generate_train_dataset(num_images):
 
-    directory = "Train Images/"
+    directory = "../Train Images/"
     file_name_base = "train_image"
     file_type = ".png"
 
-    json_file_name = "facit.json"
+    #json_file_name = "Noc Testing/facit.json"
 
     facit_data = dict()
 
-    for i in tqdm(range(num_images, desc="Generating train images")):
+    for i in tqdm(range(num_images), desc="Generating train images"):
         screen, ai_position_x, ai_position_y, ai_radius = generate_image()
         file_name = directory + file_name_base + str(i) + file_type
         pg.image.save(screen, file_name)
-        facit_data[file_name] = [ai_position_x, ai_position_y, ai_radius]
+                      #file_name)
+        #facit_data[file_name] = [ai_position_x, ai_position_y, ai_radius]
 
-        with open(json_file_name, "w") as facit:
-            json.dump(facit_data, facit)
+        #with open(json_file_name, "w") as facit:
+        #    json.dump(facit_data, facit)
 
 
 def generate_test_dataset(num_images):
 
-    directory = "Test Images/"
+    directory = "../Test Images/"
     file_name_base = "test_image"
     file_type = ".png"
 
     facit_data = dict()
 
-    for i in tqdm(range(num_images, desc="Generating test images")):
+    for i in tqdm(range(num_images), desc="Generating test images"):
 
         screen, ai_position_x, ai_position_y, ai_radius = generate_image()
         file_name = directory + file_name_base + str(i) + file_type
         pg.image.save(screen, file_name)
-        facit_data[file_name] = [ai_position_x, ai_position_y, ai_radius]
+        #facit_data[file_name] = [ai_position_x, ai_position_y, ai_radius]
 
-        with open("test_facit.json", "w") as facit:
-            json.dump(facit_data, facit)
+        #with open("test_facit.json", "w") as facit:
+        #    json.dump(facit_data, facit)
 
 
 def generate_image():
@@ -81,5 +82,8 @@ def generate_image():
     return screen, ai_position_x, ai_position_y, ai_radius
 
 
-#generate_train_dataset(10000)
-generate_test_dataset(1000)
+if __name__ == "__main__":
+    #generate_train_dataset(10000)
+    #generate_test_dataset(1000)
+    pass
+
