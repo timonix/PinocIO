@@ -29,11 +29,11 @@ class Encoder(nn.Module):
         self.c2 = nn.Conv2d(num_filters_layer_one, num_filters_layer_two, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
         self.c_lin = nn.Linear(width * height * num_filters_layer_two / 4, latent_size)
 
-    def forward(self, x, hidden_state):
-        combined = torch.cat((x, hidden_state), 1)
-        hidden = torch.sigmoid(self.in2hidden(combined))
-        output = self.in2output(combined)
-        return output, hidden
+    def forward(self, x):
+        x = F.relu(self.c1(x))
+        x = F.relu(self.c2(x))
+        x = F.relu(self.c_lin(x))
+        return x
 
 class Decoder(nn.Module):
     def __init__(self, input_size, output_size):
