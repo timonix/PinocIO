@@ -26,6 +26,7 @@ class Encoder_B(nn.Module):
                  num_input_channels: int,  # Colors
                  base_channel_size: int,  # First layer number of channels
                  latent_dim: int,  # Size of latentSpace
+                 magic_number: int,  # width x height kind of
                  act_fn: object = nn.GELU):
         """
         Inputs:
@@ -48,11 +49,13 @@ class Encoder_B(nn.Module):
             nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1, stride=2),  # 8x8 => 4x4
             act_fn(),
             nn.Flatten(),  # Image grid to single feature vector
-            nn.Linear(2 * 16 * c_hid, latent_dim)
         )
+        self.lin = nn.Linear(magic_number, latent_dim)
 
     def forward(self, x):
-        return self.net(x)
+        x = self.net(x)
+        x = self.lin(x)
+        return x
 
 
 class Decoder_B(nn.Module):
@@ -60,6 +63,7 @@ class Decoder_B(nn.Module):
                  num_input_channels : int,
                  base_channel_size : int,
                  latent_dim : int,
+                 output_size : int, #width x height
                  act_fn : object = nn.GELU):
         """
         Inputs:
@@ -70,6 +74,7 @@ class Decoder_B(nn.Module):
         """
         super().__init__()
         c_hid = base_channel_size
+        self.c_hid = base_channel_size
         self.linear = nn.Sequential(
             nn.Linear(latent_dim, 2*16*c_hid),
             act_fn()
@@ -83,7 +88,7 @@ class Decoder_B(nn.Module):
             act_fn(),
             nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(c_hid, num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2), # 16x16 => 32x32
+            nn.ConvTranspose2d(c_hid, c_hid*6, kernel_size=3, output_padding=1, padding=1, stride=2), # 16x16 => 32x32
             nn.Tanh() # The input images is scaled between -1 and 1, hence the output has to be bounded as well
         )
 
@@ -91,6 +96,8 @@ class Decoder_B(nn.Module):
         x = self.linear(x)
         x = x.reshape(x.shape[0], -1, 4, 4)
         x = self.net(x)
+        x = x.reshape(x.shape[0], self.c_hid*6*32*32)
+        x = x[:, :180000]
         return x
 
 
