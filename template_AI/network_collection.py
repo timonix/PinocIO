@@ -1,8 +1,6 @@
 import torch
 from torch import nn
 
-
-
 import torch.nn.functional as F
 
 
@@ -26,13 +24,16 @@ class RNN(nn.Module):
 class Encoder(nn.Module):
     def __init__(self, width, height, num_filters_layer_one, num_filters_layer_two, latent_size):
         super(Encoder, self).__init__()
-        # Our first linear layer take input_size, in this case 784 nodes to 50
-        # and our second linear layer takes 50 to the num_classes we have, in
-        # this case 10.
-        self.fc1 = nn.Conv2d(3, num_filters_layer_one, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        self.fc2 = nn.Conv2d(num_filters_layer_one, num_filters_layer_two, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
-        self.fc_lin = nn.Linear(width * height * num_filters_layer_two / 4, latent_size)
 
+        self.c1 = nn.Conv2d(3, num_filters_layer_one, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        self.c2 = nn.Conv2d(num_filters_layer_one, num_filters_layer_two, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.c_lin = nn.Linear(width * height * num_filters_layer_two / 4, latent_size)
+
+    def forward(self, x, hidden_state):
+        combined = torch.cat((x, hidden_state), 1)
+        hidden = torch.sigmoid(self.in2hidden(combined))
+        output = self.in2output(combined)
+        return output, hidden
 
 class Decoder(nn.Module):
     def __init__(self, input_size, output_size):
