@@ -23,6 +23,11 @@ encoder_base_size = 32
 decoder_base_size = 32
 latent_dim = 300
 
+image_width = 32
+image_height = 32
+
+magic_number =
+
 learning_rate = 0.1
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,7 +53,7 @@ if __name__ == "__main__":
 
     for iteration in range(10):
 
-        generate_train_dataset(20)
+        generate_train_dataset(10000, 32, 32)
 
         x = np.array([np.array(Image.open(fname)) for fname in filelist])
         x = np.swapaxes(x, 1, 3)
@@ -56,7 +61,7 @@ if __name__ == "__main__":
         x = torch.FloatTensor(x)
         facit = x.reshape(x.shape[0], 200*300*3)
 
-        for epoch in tqdm(range(3)):
+        for epoch in tqdm(range(100), desc="Training Encoder"):    # Training the encoder, decoder static
             # forward
 
             latent_space = encoder(x)
@@ -66,17 +71,40 @@ if __name__ == "__main__":
 
             if epoch % 1 == 0:
                 print(
-                    f"Epoch [{epoch + 1}/{10}], "
+                    # f"Epoch [{epoch + 1}/{100}], "
                     f"Loss: {loss.item():.4f}"
                 )
                 torch.save(encoder.state_dict(), "encoder.m")
-                torch.save(decoder.state_dict(), "decoder.m")
+                # torch.save(decoder.state_dict(), "decoder.m")
 
             optimizer_de.zero_grad()
             optimizer_en.zero_grad()
             loss.backward()
 
             optimizer_en.step()
+            # optimizer_de.step()
+
+        for epoch in tqdm(range(100), desc="Training Decoder"):  # Training the decoder, encoder static
+            # forward
+
+            latent_space = encoder(x)
+            output = decoder(latent_space)
+
+            loss = criterion(output, facit)
+
+            if epoch % 1 == 0:
+                print(
+                    # f"Epoch [{epoch + 1}/{100}], "
+                    f"Loss: {loss.item():.4f}"
+                )
+                # torch.save(encoder.state_dict(), "encoder.m")
+                torch.save(decoder.state_dict(), "decoder.m")
+
+            optimizer_de.zero_grad()
+            optimizer_en.zero_grad()
+            loss.backward()
+
+            # optimizer_en.step()
             optimizer_de.step()
 
             pass
