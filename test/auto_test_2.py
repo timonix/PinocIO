@@ -14,7 +14,7 @@ from image_generator import generate_train_dataset
 import glob
 
 
-filelist = glob.glob('../Train Images/*.png')
+filelist = glob.glob('../Train Images/*.bmp')
 
 #print(filelist)
 
@@ -23,12 +23,7 @@ encoder_base_size = 32
 decoder_base_size = 32
 latent_dim = 10
 
-
-learning_rate = 0.0001
-
-image_width = 32
-image_height = 32
-
+learning_rate = 0.00001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -53,17 +48,19 @@ if __name__ == "__main__":
 
     for iteration in range(1):
 
-        generate_train_dataset(10,32,32)
-
+        # generate_train_dataset(20,32,32)
 
         x = np.array([np.array(Image.open(fname)) for fname in filelist])
-        x = x/255.0
+        x = x/255
+
+
         x = np.swapaxes(x, 1, 3)
         x = torch.FloatTensor(x)
+
         facit = x
 
 
-        for epoch in tqdm(range(20000)):
+        for epoch in tqdm(range(3000)):
             # forward
 
             latent_space = encoder(x)
@@ -76,49 +73,31 @@ if __name__ == "__main__":
                     f"Epoch [{epoch + 1}/{10}], "
                     f"Loss: {loss.item():.8f}"
                 )
+                image = output[0] * 255
+                image = image.detach().numpy()
+                for i in image.tolist():
+                    print(i)
+                image = np.swapaxes(image, 0, 2)
+                image = image.astype("uint8")
+
+                Image.fromarray(image, 'RGB').show()
                 torch.save(encoder.state_dict(), "encoder.m")
-                # torch.save(decoder.state_dict(), "decoder.m")
-
-            optimizer_de.zero_grad()
-            optimizer_en.zero_grad()
-            loss.backward()
-
-            optimizer_en.step()
-            # optimizer_de.step()
-
-        for epoch in tqdm(range(100), desc="Training Decoder"):  # Training the decoder, encoder static
-            # forward
-
-            latent_space = encoder(x)
-            output = decoder(latent_space)
-
-            loss = criterion(output, facit)
-
-            if epoch % 1 == 0:
-                print(
-                    # f"Epoch [{epoch + 1}/{100}], "
-                    f"Loss: {loss.item():.4f}"
-                )
-                # torch.save(encoder.state_dict(), "encoder.m")
                 torch.save(decoder.state_dict(), "decoder.m")
 
             optimizer_de.zero_grad()
             optimizer_en.zero_grad()
             loss.backward()
 
-            # optimizer_en.step()
+            optimizer_en.step()
             optimizer_de.step()
 
             pass
 
     image = output[0]*255
-    print(image)
-    print(image.shape)
     image = image.detach().numpy()
-    print(image.shape)
-
+    for i in image.tolist():
+        print(i)
     image = np.swapaxes(image, 0, 2)
-    print(image.shape)
-    image = image.astype(np.int8)
-    print(image)
+    image = image.astype("uint8")
+
     Image.fromarray(image, 'RGB').show()
