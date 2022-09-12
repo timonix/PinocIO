@@ -21,14 +21,14 @@ filelist = glob.glob('../Train Images/*.png')
 image_channels = 3
 encoder_base_size = 32
 decoder_base_size = 32
-latent_dim = 300
+latent_dim = 10
 
-learning_rate = 0.1
+learning_rate = 0.0001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-encoder = Encoder(image_channels, encoder_base_size, latent_dim, 60800).to(device)
-decoder = Decoder(image_channels, decoder_base_size, latent_dim, 300*200).to(device)
+encoder = Encoder(image_channels, encoder_base_size, latent_dim).to(device)
+decoder = Decoder(image_channels, decoder_base_size, latent_dim).to(device)
 
 criterion = nn.MSELoss()
 
@@ -46,17 +46,19 @@ if __name__ == "__main__":
     optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
     optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
 
-    for iteration in range(10):
+    for iteration in range(1):
 
-        generate_train_dataset(20)
+        generate_train_dataset(10,32,32)
 
         x = np.array([np.array(Image.open(fname)) for fname in filelist])
+        x = x/255.0
         x = np.swapaxes(x, 1, 3)
-
         x = torch.FloatTensor(x)
-        facit = x.reshape(x.shape[0], 200*300*3)
 
-        for epoch in tqdm(range(3)):
+        facit = x
+
+
+        for epoch in tqdm(range(20000)):
             # forward
 
             latent_space = encoder(x)
@@ -64,10 +66,10 @@ if __name__ == "__main__":
 
             loss = criterion(output, facit)
 
-            if epoch % 1 == 0:
+            if epoch % 100 == 0:
                 print(
                     f"Epoch [{epoch + 1}/{10}], "
-                    f"Loss: {loss.item():.4f}"
+                    f"Loss: {loss.item():.8f}"
                 )
                 torch.save(encoder.state_dict(), "encoder.m")
                 torch.save(decoder.state_dict(), "decoder.m")
@@ -81,5 +83,14 @@ if __name__ == "__main__":
 
             pass
 
-    image = output[0].reshape(200, 300, 3)
-    Image.fromarray(image.detach().numpy(), 'RGB').show()
+    image = output[0]*255
+    print(image)
+    print(image.shape)
+    image = image.detach().numpy()
+    print(image.shape)
+
+    image = np.swapaxes(image, 0, 2)
+    print(image.shape)
+    image = image.astype(np.int8)
+    print(image)
+    Image.fromarray(image, 'RGB').show()

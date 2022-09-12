@@ -44,7 +44,7 @@ def generate_test_dataset(num_images, width, height):
 
     size = width, height
 
-    directory = "../Test Images/"
+    directory = "Test Images/"
     file_name_base = "test_image"
     file_type = ".png"
 
@@ -96,7 +96,7 @@ def generate_image(size, width, height):
 
 
 if __name__ == "__main__":
-    #generate_train_dataset(10, 64, 64)
+    generate_train_dataset(10, 32, 32)
     #generate_test_dataset(10, 100, 50)
     pass
 
