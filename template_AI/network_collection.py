@@ -20,6 +20,7 @@ class RNN(nn.Module):
     def init_hidden(self):
         return nn.init.kaiming_uniform_(torch.empty(1, self.hidden_size))
 
+
 class Encoder_B(nn.Module):
 
     def __init__(self,
@@ -59,12 +60,12 @@ class Encoder_B(nn.Module):
 
 
 class Decoder_B(nn.Module):
+
     def __init__(self,
-                 num_input_channels : int,
-                 base_channel_size : int,
-                 latent_dim : int,
-                 output_size : int, #width x height
-                 act_fn : object = nn.GELU):
+                 num_input_channels: int,
+                 base_channel_size: int,
+                 latent_dim: int,
+                 act_fn: object = nn.GELU):
         """
         Inputs:
             - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
@@ -74,29 +75,38 @@ class Decoder_B(nn.Module):
         """
         super().__init__()
         c_hid = base_channel_size
-        self.c_hid = base_channel_size
         self.linear = nn.Sequential(
-            nn.Linear(latent_dim, 2*16*c_hid),
+            nn.Linear(latent_dim, 2 * 16 * c_hid),
             act_fn()
         )
         self.net = nn.Sequential(
-            nn.ConvTranspose2d(2*c_hid, 2*c_hid, kernel_size=3, output_padding=1, padding=1, stride=2), # 4x4 => 8x8
+            nn.ConvTranspose2d(2 * c_hid, 2 * c_hid, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 4x4 => 8x8
             act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1),
+            nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(2*c_hid, c_hid, kernel_size=3, output_padding=1, padding=1, stride=2), # 8x8 => 16x16
+            nn.ConvTranspose2d(2 * c_hid, c_hid, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 8x8 => 16x16
             act_fn(),
             nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(c_hid, c_hid*6, kernel_size=3, output_padding=1, padding=1, stride=2), # 16x16 => 32x32
-            nn.Tanh() # The input images is scaled between -1 and 1, hence the output has to be bounded as well
+            nn.ConvTranspose2d(c_hid, num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 16x16 => 32x32
+            nn.Tanh()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
         )
 
     def forward(self, x):
         x = self.linear(x)
         x = x.reshape(x.shape[0], -1, 4, 4)
         x = self.net(x)
-        x = x.reshape(x.shape[0], self.c_hid*6*32*32)
+        return x
+
+    def forward(self, x):
+        x = self.linear(x)
+        x = x.reshape(x.shape[0], -1, 16, 16)
+        x = self.net(x)
+        print(x.shape)
+        x = x.reshape(x.shape[0], -1)
         x = x[:, :180000]
         return x
 
@@ -106,7 +116,8 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
 
         self.c1 = nn.Conv2d(3, num_filters_layer_one, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        self.c2 = nn.Conv2d(num_filters_layer_one, num_filters_layer_two, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.c2 = nn.Conv2d(num_filters_layer_one, num_filters_layer_two, kernel_size=(3, 3), stride=(2, 2),
+                            padding=(1, 1))
         self.c_lin = nn.Linear(int(width * height * num_filters_layer_two / 4), latent_size)
 
     def forward(self, x):
@@ -121,11 +132,11 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
 
         self.decoder = torch.nn.Sequential(
-            torch.nn.Linear(input_size, input_size*2),
+            torch.nn.Linear(input_size, input_size * 2),
             torch.nn.ReLU(),
-            torch.nn.Linear(input_size*2, input_size*4),
+            torch.nn.Linear(input_size * 2, input_size * 4),
             torch.nn.ReLU(),
-            torch.nn.Linear(input_size*4, output_size),
+            torch.nn.Linear(input_size * 4, output_size),
             torch.nn.Sigmoid()
         )
 

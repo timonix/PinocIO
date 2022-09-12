@@ -19,9 +19,9 @@ print(filelist)
 image_channels = 3
 encoder_base_size = 32
 decoder_base_size = 32
-latent_dim = 30
+latent_dim = 300
 
-learning_rate = 0.01
+learning_rate = 0.1
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
