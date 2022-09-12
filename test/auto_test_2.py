@@ -12,7 +12,7 @@ from template_AI.network_collection import Decoder_B as Decoder
 from image_generator import generate_train_dataset
 
 import glob
-import tqdm as tqdm
+
 
 filelist = glob.glob('../Train Images/*.png')
 
@@ -43,41 +43,43 @@ if __name__ == "__main__":
     # latent_space = encoder.forward(x)
     # decoder(latent_space)
 
-    optimizer_en = optim.SGD(encoder.parameters(), lr=learning_rate)
-    optimizer_de = optim.SGD(decoder.parameters(), lr=learning_rate)
+    optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
+    optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
 
-    generate_train_dataset(10)
+    for iteration in range(10):
 
-    x = np.array([np.array(Image.open(fname)) for fname in filelist])
-    x = np.swapaxes(x, 1, 3)
+        generate_train_dataset(20)
 
-    x = torch.FloatTensor(x)
-    facit = x.reshape(x.shape[0], 200*300*3)
+        x = np.array([np.array(Image.open(fname)) for fname in filelist])
+        x = np.swapaxes(x, 1, 3)
 
-    for epoch in tqdm(range(100)):
-        # forward
+        x = torch.FloatTensor(x)
+        facit = x.reshape(x.shape[0], 200*300*3)
 
-        latent_space = encoder(x)
-        output = decoder(latent_space)
+        for epoch in tqdm(range(3)):
+            # forward
 
-        loss = criterion(output, facit)
+            latent_space = encoder(x)
+            output = decoder(latent_space)
 
-        if epoch % 1 == 0:
-            print(
-                f"Epoch [{epoch + 1}/{10}], "
-                f"Loss: {loss.item():.4f}"
-            )
-            torch.save(encoder.state_dict(), "encoder.m")
-            torch.save(decoder.state_dict(), "decoder.m")
+            loss = criterion(output, facit)
 
-        optimizer_de.zero_grad()
-        optimizer_en.zero_grad()
-        loss.backward()
+            if epoch % 1 == 0:
+                print(
+                    f"Epoch [{epoch + 1}/{10}], "
+                    f"Loss: {loss.item():.4f}"
+                )
+                torch.save(encoder.state_dict(), "encoder.m")
+                torch.save(decoder.state_dict(), "decoder.m")
 
-        optimizer_en.step()
-        optimizer_de.step()
+            optimizer_de.zero_grad()
+            optimizer_en.zero_grad()
+            loss.backward()
 
-        pass
+            optimizer_en.step()
+            optimizer_de.step()
+
+            pass
 
     image = output[0].reshape(200, 300, 3)
     Image.fromarray(image.detach().numpy(), 'RGB').show()
