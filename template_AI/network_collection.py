@@ -24,11 +24,10 @@ class RNN(nn.Module):
 class Encoder_B(nn.Module):
 
     def __init__(self,
-                 num_input_channels: int,  # Colors
-                 base_channel_size: int,  # First layer number of channels
-                 latent_dim: int,  # Size of latentSpace
-                 magic_number: int,  # width x height kind of
-                 act_fn: object = nn.GELU):
+                 num_input_channels : int,
+                 base_channel_size : int,
+                 latent_dim : int,
+                 act_fn : object = nn.GELU):
         """
         Inputs:
             - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
@@ -39,24 +38,22 @@ class Encoder_B(nn.Module):
         super().__init__()
         c_hid = base_channel_size
         self.net = nn.Sequential(
-            nn.Conv2d(num_input_channels, c_hid, kernel_size=3, padding=1, stride=2),  # 32x32 => 16x16
+            nn.Conv2d(num_input_channels, c_hid, kernel_size=3, padding=1, stride=2), # 32x32 => 16x16
             act_fn(),
             nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.Conv2d(c_hid, 2 * c_hid, kernel_size=3, padding=1, stride=2),  # 16x16 => 8x8
+            nn.Conv2d(c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 16x16 => 8x8
             act_fn(),
-            nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1),
+            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1, stride=2),  # 8x8 => 4x4
+            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 8x8 => 4x4
             act_fn(),
-            nn.Flatten(),  # Image grid to single feature vector
+            nn.Flatten(), # Image grid to single feature vector
+            nn.Linear(2*16*c_hid, latent_dim)
         )
-        self.lin = nn.Linear(magic_number, latent_dim)
 
     def forward(self, x):
-        x = self.net(x)
-        x = self.lin(x)
-        return x
+        return self.net(x)
 
 
 class Decoder_B(nn.Module):
@@ -99,15 +96,6 @@ class Decoder_B(nn.Module):
         x = self.linear(x)
         x = x.reshape(x.shape[0], -1, 4, 4)
         x = self.net(x)
-        return x
-
-    def forward(self, x):
-        x = self.linear(x)
-        x = x.reshape(x.shape[0], -1, 16, 16)
-        x = self.net(x)
-        print(x.shape)
-        x = x.reshape(x.shape[0], -1)
-        x = x[:, :180000]
         return x
 
 
