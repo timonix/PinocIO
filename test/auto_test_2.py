@@ -26,8 +26,6 @@ latent_dim = 300
 image_width = 32
 image_height = 32
 
-magic_number =
-
 learning_rate = 0.1
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
