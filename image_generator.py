@@ -1,3 +1,6 @@
+import os
+import shutil
+
 import pygame as pg
 import random
 from PIL import Image
@@ -17,6 +20,7 @@ colors = [green, blue]
 #max_radius = 20
 
 
+
 def generate_train_dataset(num_images, width, height):
 
     size = width, height
@@ -29,10 +33,15 @@ def generate_train_dataset(num_images, width, height):
 
     facit_data = dict()
 
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     for i in tqdm(range(num_images), desc="Generating train images"):
         screen, ai_position_x, ai_position_y, ai_radius = generate_image(size, width, height)
         file_name = directory + file_name_base + str(i) + file_type
+
         pg.image.save(screen, file_name)
+
                       #file_name)
         #facit_data[file_name] = [ai_position_x, ai_position_y, ai_radius]
 
@@ -66,6 +75,7 @@ def generate_image(size, width, height):
     screen = pg.Surface(size)
 
     screen.fill(black)
+
 
     min_radius = int(width/15)
     max_radius = int(width/8)

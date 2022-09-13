@@ -3,6 +3,8 @@ import torch
 import numpy as np
 from PIL import Image
 
+import time
+
 from tqdm import tqdm
 from torch import optim  # For optimizers like SGD, Adam, etc.
 from torch import nn
@@ -14,7 +16,7 @@ from image_generator import generate_train_dataset
 import glob
 
 
-filelist = glob.glob('../Train Images/*.bmp')
+filelist = glob.glob('../Train Images/*.png')
 
 #print(filelist)
 
@@ -46,16 +48,18 @@ if __name__ == "__main__":
     optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
     optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
 
-    for iteration in range(1):
+    for iteration in range(10):
 
-        # generate_train_dataset(20,32,32)
+        generate_train_dataset(1000, 32, 32)
 
         x = np.array([np.array(Image.open(fname)) for fname in filelist])
         x = x/255
 
 
         x = np.swapaxes(x, 1, 3)
-        x = torch.FloatTensor(x)
+
+        x = torch.FloatTensor(x).to(device)
+
 
         facit = x
 
@@ -68,19 +72,11 @@ if __name__ == "__main__":
 
             loss = criterion(output, facit)
 
-            if epoch % 100 == 0:
+            if epoch % 500 == 0:
                 print(
-                    f"Epoch [{epoch + 1}/{10}], "
                     f"Loss: {loss.item():.8f}"
                 )
-                image = output[0] * 255
-                image = image.detach().numpy()
-                for i in image.tolist():
-                    print(i)
-                image = np.swapaxes(image, 0, 2)
-                image = image.astype("uint8")
 
-                Image.fromarray(image, 'RGB').show()
                 torch.save(encoder.state_dict(), "encoder.m")
                 torch.save(decoder.state_dict(), "decoder.m")
 
@@ -94,10 +90,11 @@ if __name__ == "__main__":
             pass
 
     image = output[0]*255
-    image = image.detach().numpy()
+    image = image.cpu().detach().numpy()
     for i in image.tolist():
         print(i)
     image = np.swapaxes(image, 0, 2)
     image = image.astype("uint8")
+    image = image + 11
 
     Image.fromarray(image, 'RGB').show()
