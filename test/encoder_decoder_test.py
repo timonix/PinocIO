@@ -25,6 +25,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 encoder = Encoder(width, height, 32, 32, latent_size).to(device)
 decoder = Decoder(latent_size, height*width).to(device)
 
+print(device)
+
 if __name__ == "__main__":
     # Load Training and Test data
     train_dataset = []
