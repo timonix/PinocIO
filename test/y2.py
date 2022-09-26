@@ -55,7 +55,7 @@ while True:
 
     ll = []
 
-    for i in range(5):
+    for i in range(100):
         frame = stream.read()
         # read frames
 
@@ -87,7 +87,7 @@ while True:
 
     facit = x
 
-    for epoch in tqdm(range(5)):
+    for epoch in tqdm(range(50)):
         # forward
 
         latent_space = encoder(x)
