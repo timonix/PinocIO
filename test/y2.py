@@ -7,6 +7,9 @@ from tqdm import tqdm
 from torch import optim  # For optimizers like SGD, Adam, etc.
 from torch import nn
 
+import sys, os
+sys.path.append('/workspace/PinocIO')
+
 from template_AI.network_collection import Encoder64 as Encoder
 from template_AI.network_collection import Decoder64 as Decoder
 import cv2
