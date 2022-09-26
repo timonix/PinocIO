@@ -55,7 +55,7 @@ while True:
 
     ll = []
 
-    for i in range(100):
+    for i in range(50):
         frame = stream.read()
         # read frames
 
