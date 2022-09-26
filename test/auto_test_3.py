@@ -10,8 +10,8 @@ from tqdm import tqdm
 from torch import optim  # For optimizers like SGD, Adam, etc.
 from torch import nn
 
-from template_AI.network_collection import Encoder_B as Encoder
-from template_AI.network_collection import Decoder_B as Decoder
+from template_AI.network_collection import Encoder64 as Encoder
+from template_AI.network_collection import Decoder64 as Decoder
 from image_generator import generate_train_dataset
 
 import glob
@@ -32,8 +32,8 @@ learning_rate = 0.00001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-encoder = Encoder(image_channels, encoder_base_size, latent_dim).to(device)
-decoder = Decoder(image_channels, decoder_base_size, latent_dim).to(device)
+encoder = Encoder(image_channels, latent_dim).to(device)
+decoder = Decoder(image_channels, latent_dim).to(device)
 
 criterion = nn.MSELoss()
 
@@ -51,11 +51,11 @@ if __name__ == "__main__":
     optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
     optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
 
-    encoder.load_state_dict(torch.load("encoder.m"))
-    decoder.load_state_dict(torch.load("decoder.m"))
+    #encoder.load_state_dict(torch.load("encoder.m"))
+    #decoder.load_state_dict(torch.load("decoder.m"))
 
-    encoder.eval()
-    decoder.eval()
+    #encoder.eval()
+    #decoder.eval()
 
     cam = cv2.VideoCapture(0)
     for iteration in range(1000000):
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         img = pil_image
 
         image_size = (640, 480)
-        cunk_size = 32
+        cunk_size = 64
 
         cc = cunker(cunk_size)
         ll = []
@@ -87,28 +87,27 @@ if __name__ == "__main__":
         facit = x
 
 
-        for epoch in tqdm(range(1)):
+        for epoch in tqdm(range(50)):
             # forward
 
             latent_space = encoder(x)
             output = decoder(latent_space)
 
-            #loss = criterion(output, facit)
+            loss = criterion(output, facit)
 
-            #if epoch % 500 == 0:
-            #    print(
-            #        f"Loss: {loss.item():.8f}"
-            #    )
+            if epoch % 500 == 0:
+                print(
+                    f"Loss: {loss.item():.8f}"
+                )
 
-                #torch.save(encoder.state_dict(), "encoder.m")
-                #torch.save(decoder.state_dict(), "decoder.m")
+                torch.save(encoder.state_dict(), "encoder.m")
+                torch.save(decoder.state_dict(), "decoder.m")
+            optimizer_de.zero_grad()
+            optimizer_en.zero_grad()
+            loss.backward()
 
-            #optimizer_de.zero_grad()
-            #optimizer_en.zero_grad()
-            #loss.backward()
-
-            #optimizer_en.step()
-            #optimizer_de.step()
+            optimizer_en.step()
+            optimizer_de.step()
 
 
 
@@ -118,12 +117,10 @@ if __name__ == "__main__":
         image = np.swapaxes(image, 1, 3)
         image = image*255
         image = image.astype("uint8")
-
-        print(image.shape)
         pila = []
         for im in image:
             pila.append(Image.fromarray(im))
 
-        dc = decunker(image_size)
+        dc = decunker(image_size, 64)
         dc.decunk(pila).show()
 

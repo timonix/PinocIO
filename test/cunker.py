@@ -43,7 +43,7 @@ class cunker():
 
 
 class decunker():
-    def __init__(self, image_size,cunk_size=32):
+    def __init__(self, image_size, cunk_size=32):
         self.cunk_size = cunk_size
         self.image_size = image_size
 

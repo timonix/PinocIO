@@ -4,3 +4,6 @@ pygame
 tqdm
 matplotlib
 opencv-python
+
+yt_dlp
+vidgear

@@ -99,7 +99,7 @@ class Decoder64(nn.Module):
             act_fn(),
             nn.ConvTranspose2d(layer_params[7], num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
 
-            nn.Tanh()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
+            nn.Sigmoid()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
         )
 
     def forward(self, x):
