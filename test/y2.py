@@ -125,13 +125,6 @@ while True:
 
     # Show output window
 
-    key = cv2.waitKey(1) & 0xFF
-    # check for 'q' key-press
-    if key == ord("q"):
-        # if 'q' key-pressed break out
-        break
-
-cv2.destroyAllWindows()
 # close output window
 
 # safely close video stream.
