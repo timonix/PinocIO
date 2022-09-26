@@ -27,6 +27,7 @@ class Encoder_B(nn.Module):
                  num_input_channels : int,
                  base_channel_size : int,
                  latent_dim : int,
+                 magic_number : int,
                  act_fn : object = nn.GELU):
         """
         Inputs:
@@ -49,7 +50,7 @@ class Encoder_B(nn.Module):
             nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 8x8 => 4x4
             act_fn(),
             nn.Flatten(), # Image grid to single feature vector
-            nn.Linear(2*16*c_hid, latent_dim)
+            nn.Linear(magic_number, latent_dim)
         )
 
     def forward(self, x):
@@ -87,9 +88,19 @@ class Decoder_B(nn.Module):
             act_fn(),
             nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
             act_fn(),
+            nn.ConvTranspose2d(c_hid, c_hid, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 16x16 => 32x32
+            act_fn(),
+            nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(c_hid, c_hid, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 16x16 => 32x32
+            act_fn(),
+            nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
+            act_fn(),
             nn.ConvTranspose2d(c_hid, num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
             # 16x16 => 32x32
-            nn.Tanh()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
+            nn.Sigmoid()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
         )
 
     def forward(self, x):
