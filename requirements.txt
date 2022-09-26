@@ -2,3 +2,4 @@ numpy
 Pillow
 pygame
 tqdm
+opencv-python
