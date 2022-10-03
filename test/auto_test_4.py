@@ -21,14 +21,14 @@ encoder_base_size = 32
 decoder_base_size = 32
 latent_dim = 100
 
-bath_size = 5000
+bath_size = 2500
 
 learning_rate = 0.00001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-encoder = Encoder(image_channels, latent_dim).to(device)
-decoder = Decoder(image_channels, latent_dim).to(device)
+encoder = Encoder(image_channels, latent_dim, layer_params=[80, 72, 64, 56, 48, 40, 80]).to(device)
+decoder = Decoder(image_channels, latent_dim, layer_params=[80, 40, 48, 56, 64, 72, 80]).to(device)
 
 criterion = nn.MSELoss()
 
@@ -40,12 +40,15 @@ if exists("encoder.m"):
     decoder.eval()
 
 if __name__ == "__main__":
-    dataLoader = Data()
+    print("Loading data")
+    dataLoader = Data(path="C:\\Users\\u057742.CORP\\Train Images\\")
     optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
     optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
+    print("shuffle data")
 
     dataLoader.shuffle()
     data = dataLoader.getNext(batch_size=bath_size)
+    print("Started")
     while data is not None:
         x = np.array(data)
         x = x / 255

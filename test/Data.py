@@ -72,4 +72,4 @@ class Data():
         random.shuffle(self.files)
 
 #
-#ex = YTExtractor(url="https://www.youtube.com/watch?v=VGgNyu5hqZo", framePercentage=0.1)
+#ex = YTExtractor(url="https://www.youtube.com/watch?v=rc2urzXP4ok", framePercentage=1,path="C:\\Users\\u057742.CORP\\Train Images\\")
