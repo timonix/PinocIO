@@ -55,10 +55,11 @@ if __name__ == "__main__":
         x = np.array([np.array(Image.open(fname)) for fname in filelist])
         x = x/255
 
-
         x = np.swapaxes(x, 1, 3)
 
         x = torch.FloatTensor(x).to(device)
+
+
 
 
         facit = x

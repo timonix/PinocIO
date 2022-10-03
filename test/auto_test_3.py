@@ -10,6 +10,8 @@ from tqdm import tqdm
 from torch import optim  # For optimizers like SGD, Adam, etc.
 from torch import nn
 
+from os.path import exists
+
 from template_AI.network_collection import Encoder64 as Encoder
 from template_AI.network_collection import Decoder64 as Decoder
 from image_generator import generate_train_dataset
@@ -26,14 +28,21 @@ from cunker import cunker, decunker
 image_channels = 3
 encoder_base_size = 32
 decoder_base_size = 32
-latent_dim = 10
+latent_dim = 100
 
 learning_rate = 0.00001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-encoder = Encoder(image_channels, latent_dim).to(device)
-decoder = Decoder(image_channels, latent_dim).to(device)
+encoder = Encoder(image_channels, latent_dim, layer_params=[80, 72, 64, 56, 48, 40, 32]).to(device)
+decoder = Decoder(image_channels, latent_dim, layer_params=[32, 40, 48, 56, 64, 72, 80]).to(device)
+
+if exists("encoder.m"):
+    encoder.load_state_dict(torch.load("encoder.m"))
+    decoder.load_state_dict(torch.load("decoder.m"))
+
+    encoder.eval()
+    decoder.eval()
 
 criterion = nn.MSELoss()
 

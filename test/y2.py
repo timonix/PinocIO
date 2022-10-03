@@ -12,7 +12,6 @@ sys.path.append('/workspace/PinocIO')
 
 from template_AI.network_collection import Encoder64 as Encoder
 from template_AI.network_collection import Decoder64 as Decoder
-import cv2
 
 import cv2
 import torch
@@ -25,7 +24,9 @@ from os.path import exists
 image_channels = 3
 encoder_base_size = 32
 decoder_base_size = 32
-latent_dim = 10
+latent_dim = 100
+
+NUM_EPOCHS = 50
 
 learning_rate = 0.00001
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -44,8 +45,9 @@ if exists("encoder.m"):
 criterion = nn.MSELoss()
 
 
-stream = CamGear(source='https://www.youtube.com/watch?v=uySgklnlX3Y', stream_mode=True,
-                 logging=True,).start()  # YouTube Video URL as input
+
+stream = CamGear(source='https://www.youtube.com/watch?v=E2sSvVCRI4s', stream_mode=True,
+                 logging=True).start()  # YouTube Video URL as input
 
 optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
 optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
@@ -58,6 +60,7 @@ while True:
         frame = stream.read()
 
     for i in range(1):
+
         frame = stream.read()
         # read frames
 
@@ -89,7 +92,7 @@ while True:
 
     facit = x
 
-    for epoch in tqdm(range(1)):
+    for epoch in tqdm(range(NUM_EPOCHS)):
         # forward
 
         latent_space = encoder(x)
@@ -120,7 +123,9 @@ while True:
         pila.append(Image.fromarray(im))
 
     dc = decunker(image_size, 64)
+
     dc.decunk(pila).show()
+
 
 
     # do something with frame here
