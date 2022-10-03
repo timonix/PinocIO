@@ -1,4 +1,4 @@
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 
 # OpenCV install guide: https://www.youtube.com/watch?v=QzVYnG-WaM4&ab_channel=SamWestbyTech
 # https://raspberrypi-guide.github.io/programming/install-opencv
