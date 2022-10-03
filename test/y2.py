@@ -35,8 +35,8 @@ decoder = Decoder(image_channels, latent_dim).to(device)
 
 
 if exists("encoder.m"):
-    encoder.load_state_dict(torch.load("encoder.m"))
-    decoder.load_state_dict(torch.load("decoder.m"))
+    encoder.load_state_dict(torch.load("encoder.m",map_location=device))
+    decoder.load_state_dict(torch.load("decoder.m",map_location=device))
 
     encoder.eval()
     decoder.eval()
@@ -45,7 +45,7 @@ criterion = nn.MSELoss()
 
 
 stream = CamGear(source='https://www.youtube.com/watch?v=uySgklnlX3Y', stream_mode=True,
-                 logging=True).start()  # YouTube Video URL as input
+                 logging=True,).start()  # YouTube Video URL as input
 
 optimizer_en = optim.Adam(encoder.parameters(), lr=learning_rate)
 optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
@@ -54,8 +54,10 @@ optimizer_de = optim.Adam(decoder.parameters(), lr=learning_rate)
 while True:
 
     ll = []
+    for i in range(60):
+        frame = stream.read()
 
-    for i in range(10):
+    for i in range(1):
         frame = stream.read()
         # read frames
 
@@ -87,7 +89,7 @@ while True:
 
     facit = x
 
-    for epoch in tqdm(range(50)):
+    for epoch in tqdm(range(1)):
         # forward
 
         latent_space = encoder(x)
@@ -118,7 +120,7 @@ while True:
         pila.append(Image.fromarray(im))
 
     dc = decunker(image_size, 64)
-    # dc.decunk(pila).show()
+    dc.decunk(pila).show()
 
 
     # do something with frame here
