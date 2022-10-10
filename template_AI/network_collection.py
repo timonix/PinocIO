@@ -26,7 +26,7 @@ class Encoder64(nn.Module):
                  num_input_channels: int,
                  latent_dim: int,
                  layer_params=None,  # small to large
-                 act_fn: object = nn.GELU):
+                 act_fn: object = torch.GELU):
         """
         Inputs:
             - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
