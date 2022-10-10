@@ -3,7 +3,10 @@ Pillow
 pygame
 tqdm
 matplotlib
-opencv-python-headless==4.5.4.60
+opencv-python==4.5.1.48
 
 yt_dlp
 vidgear
+
+gym-retro
+gym==0.21.0

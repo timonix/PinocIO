@@ -14,6 +14,9 @@ from os.path import exists
 
 from template_AI.network_collection import Encoder64 as Encoder
 from template_AI.network_collection import Decoder64 as Decoder
+
+from template_AI.network_collection import Decoder256 as Decoder256
+
 from Data import Data
 
 image_channels = 3
@@ -31,6 +34,7 @@ encoder = Encoder(image_channels, latent_dim, layer_params=[80, 72, 64, 56, 48, 
 decoder = Decoder(image_channels, latent_dim, layer_params=[80, 40, 48, 56, 64, 72, 80]).to(device)
 
 criterion = nn.MSELoss()
+
 
 if exists("encoder.m"):
     encoder.load_state_dict(torch.load("encoder.m"))

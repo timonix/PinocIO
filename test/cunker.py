@@ -53,8 +53,11 @@ class decunker():
         image1 = images_to_merge[0]
         cols = int(self.image_size[0]/self.cunk_size)
         rows = int(self.image_size[1]/self.cunk_size)
+
+        print(cols)
+        print(rows)
         new_width = self.cunk_size * cols
-        new_height = self.cunk_size *rows
+        new_height = self.cunk_size * rows
         new_image = Image.new(image1.mode, (new_width, new_height))
         for i in range(0, rows):
             for j in range(0, cols):

@@ -12,9 +12,9 @@ class RNN(nn.Module):
         self.in2output = nn.Linear(input_size + hidden_size, output_size)
 
     def forward(self, x, hidden_state):
-        combined = torch.cat((x, hidden_state), 1)
-        hidden = torch.sigmoid(self.in2hidden(combined))
-        output = self.in2output(combined)
+        combined = torch.cat((x, hidden_state))
+        hidden = self.in2hidden(combined)
+        output = torch.sigmoid(self.in2output(combined))
         return output, hidden
 
     def init_hidden(self):
@@ -25,7 +25,7 @@ class Encoder64(nn.Module):
     def __init__(self,
                  num_input_channels: int,
                  latent_dim: int,
-                 layer_params=None, # small to large
+                 layer_params=None,  # small to large
                  act_fn: object = nn.GELU):
         """
         Inputs:
@@ -97,7 +97,69 @@ class Decoder64(nn.Module):
             act_fn(),
             nn.Conv2d(layer_params[5], layer_params[6], kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(layer_params[6], num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
+            nn.ConvTranspose2d(layer_params[6], num_input_channels, kernel_size=3, output_padding=1, padding=1,
+                               stride=2),
+
+            nn.Sigmoid()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
+        )
+
+    def forward(self, x):
+        x = self.linear(x)
+        x = x.reshape(x.shape[0], -1, 4, 4)
+        x = self.net(x)
+        return x
+
+
+class Decoder256(nn.Module):
+
+    def __init__(self,
+                 num_input_channels: int,
+                 latent_dim: int,
+                 params=None,
+                 act_fn: object = nn.GELU):
+        """
+        Inputs:
+            - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
+            - base_channel_size : Number of channels we use in the last convolutional layers. Early layers might use a duplicate of it.
+            - latent_dim : Dimensionality of latent representation z
+            - act_fn : Activation function used throughout the decoder network
+        """
+        super().__init__()
+        if params is None:
+            params = [64, 64, 32, 32, 32, 32, 32, 32, 32, 32]
+
+        self.linear = nn.Sequential(
+            nn.Linear(latent_dim, 16 * params[0]),
+            act_fn()
+        )
+        self.net = nn.Sequential(  # large to small
+            nn.ConvTranspose2d(params[0], params[1], kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 4x4 => 8x8
+            act_fn(),
+            nn.Conv2d(params[1], params[2], kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(params[2], params[3], kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 8x8 => 16x16
+            act_fn(),
+            nn.Conv2d(params[3], params[4], kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(params[4], params[5], kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 16x16 => 32x32
+            act_fn(),
+            nn.Conv2d(params[5], params[6], kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(params[6], num_input_channels, kernel_size=3, output_padding=1, padding=1,stride=2),
+            # 32x32 => 64x64
+            act_fn(),
+            nn.Conv2d(params[6], params[7], kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(params[7], params[8], kernel_size=3, output_padding=1, padding=1,stride=2),
+            # 64x64 => 128x128
+            act_fn(),
+            nn.Conv2d(params[8], params[9], kernel_size=3, padding=1),
+            act_fn(),
+            nn.ConvTranspose2d(params[9], num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
+            # 128x128 => 256x256
 
             nn.Sigmoid()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
         )
@@ -112,10 +174,10 @@ class Decoder64(nn.Module):
 class Encoder_B(nn.Module):
 
     def __init__(self,
-                 num_input_channels : int,
-                 base_channel_size : int,
-                 latent_dim : int,
-                 act_fn : object = nn.GELU):
+                 num_input_channels: int,
+                 base_channel_size: int,
+                 latent_dim: int,
+                 act_fn: object = nn.GELU):
         """
         Inputs:
             - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
@@ -126,18 +188,18 @@ class Encoder_B(nn.Module):
         super().__init__()
         c_hid = base_channel_size
         self.net = nn.Sequential(
-            nn.Conv2d(num_input_channels, c_hid, kernel_size=3, padding=1, stride=2), # 32x32 => 16x16
+            nn.Conv2d(num_input_channels, c_hid, kernel_size=3, padding=1, stride=2),  # 32x32 => 16x16
             act_fn(),
             nn.Conv2d(c_hid, c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.Conv2d(c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 16x16 => 8x8
+            nn.Conv2d(c_hid, 2 * c_hid, kernel_size=3, padding=1, stride=2),  # 16x16 => 8x8
             act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1),
+            nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1),
             act_fn(),
-            nn.Conv2d(2*c_hid, 2*c_hid, kernel_size=3, padding=1, stride=2), # 8x8 => 4x4
+            nn.Conv2d(2 * c_hid, 2 * c_hid, kernel_size=3, padding=1, stride=2),  # 8x8 => 4x4
             act_fn(),
-            nn.Flatten(), # Image grid to single feature vector
-            nn.Linear(2*16*c_hid, latent_dim)
+            nn.Flatten(),  # Image grid to single feature vector
+            nn.Linear(2 * 16 * c_hid, latent_dim)
         )
 
     def forward(self, x):
@@ -246,6 +308,6 @@ class FC(nn.Module):
         I recommend using nn.functional (F)
         """
 
-        x = F.relu(self.fc1(x))
+        x = F.sigmoid(self.fc1(x))
         x = self.fc2(x)
         return x

@@ -14,3 +14,17 @@ installs libs into enviroment
 - Prepare Raspberry pi
 - Start working on other parts of the AI
 
+# Training video & reward
+
+1. gather video
+2. train video
+
+# Training reward
+1. record play
+2. lock action net, lock video
+3. train reward net
+
+# training action net
+
+
+

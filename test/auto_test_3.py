@@ -28,14 +28,17 @@ from cunker import cunker, decunker
 image_channels = 3
 encoder_base_size = 32
 decoder_base_size = 32
-latent_dim = 100
+latent_dim = 10
 
 learning_rate = 0.00001
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-encoder = Encoder(image_channels, latent_dim, layer_params=[80, 72, 64, 56, 48, 40, 32]).to(device)
-decoder = Decoder(image_channels, latent_dim, layer_params=[32, 40, 48, 56, 64, 72, 80]).to(device)
+#encoder = Encoder(image_channels, latent_dim, layer_params=[80, 72, 64, 56, 48, 40, 32]).to(device)
+#decoder = Decoder(image_channels, latent_dim, layer_params=[32, 40, 48, 56, 64, 72, 80]).to(device)
+
+encoder = Encoder(image_channels, latent_dim).to(device)
+decoder = Decoder(image_channels, latent_dim).to(device)
 
 if exists("encoder.m"):
     encoder.load_state_dict(torch.load("encoder.m"))
