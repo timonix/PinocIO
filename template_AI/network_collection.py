@@ -65,7 +65,7 @@ class Decoder64(nn.Module):
                  num_input_channels: int,
                  latent_dim: int,
                  layer_params=None,
-                 act_fn: object = nn.GELU):
+                 act_fn: object = torch.GELU):
         """
         Inputs:
             - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
