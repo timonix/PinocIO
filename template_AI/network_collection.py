@@ -1,5 +1,6 @@
 import torch
-from torch import nn
+import torch.nn as nn
+#from torch import nn
 
 import torch.nn.functional as F
 
@@ -26,7 +27,7 @@ class Encoder64(nn.Module):
                  num_input_channels: int,
                  latent_dim: int,
                  layer_params=None,  # small to large
-                 act_fn: object = torch.RELU):
+                 act_fn: object = nn.ReLU):
         """
         Inputs:
             - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
@@ -65,7 +66,7 @@ class Decoder64(nn.Module):
                  num_input_channels: int,
                  latent_dim: int,
                  layer_params=None,
-                 act_fn: object = torch.RELU):
+                 act_fn: object = nn.ReLU()):
         """
         Inputs:
             - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
@@ -116,7 +117,7 @@ class Decoder256(nn.Module):
                  num_input_channels: int,
                  latent_dim: int,
                  params=None,
-                 act_fn: object = nn.RELU):
+                 act_fn: object = nn.ReLU):
         """
         Inputs:
             - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
@@ -177,7 +178,7 @@ class Encoder_B(nn.Module):
                  num_input_channels: int,
                  base_channel_size: int,
                  latent_dim: int,
-                 act_fn: object = nn.RELU):
+                 act_fn: object = nn.ReLU):
         """
         Inputs:
             - num_input_channels : Number of input channels of the image. For CIFAR, this parameter is 3
@@ -212,7 +213,7 @@ class Decoder_B(nn.Module):
                  num_input_channels: int,
                  base_channel_size: int,
                  latent_dim: int,
-                 act_fn: object = nn.RELU):
+                 act_fn: object = nn.ReLU):
         """
         Inputs:
             - num_input_channels : Number of channels of the image to reconstruct. For CIFAR, this parameter is 3
