@@ -11,7 +11,7 @@ installs libs into environment
 ## Raspberry Pi
 
 1. Install virtual environment
-2. run command "source .venv/bin/activate"
+2. run command: source .venv/bin/activate
 3. Run install_requirements.sh
 4. Do the rest
 

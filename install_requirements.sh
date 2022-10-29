@@ -17,3 +17,4 @@ sudo apt-get install python-opencv
 sudo apt install libopenblas-dev libblas-dev m4 cmake cython python3-dev python3-yaml python3-setuptools
 pip3 install /home/pi/Documents/torch-1.0.0a0+8322165-cp37-cp37m-linux_armv7l.whl
 
+pip3 install RPi.GPIO
