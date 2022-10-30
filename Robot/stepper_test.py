@@ -23,11 +23,11 @@ GPIO.output(dir, GPIO.LOW)
 def press(key):
     if key == 's':
         print("stepping")
-        for i in range(10):
+        for i in range(200):
             GPIO.output(step, GPIO.HIGH)
-            sleep(0.1)
+            sleep(0.05)
             GPIO.output(step, GPIO.LOW)
-            sleep(0.1)
+            sleep(0.05)
 
     if key == 'q':
         sshkeyboard.stop_listening()  # Shutdown is here to make check_action have a chance to shut itself down
