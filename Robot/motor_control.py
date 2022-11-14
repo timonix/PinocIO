@@ -27,9 +27,9 @@ class Movement:
 
     def go_forward(self):
         for i in range(1600):
-            GPIO.output(self.step, GPIO.HIGH)
+            GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
-            GPIO.output(self.step, GPIO.LOW)
+            GPIO.output(self.m1_step, GPIO.LOW)
             sleep(0.0001)
 
     def go_backward(self):
