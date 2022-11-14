@@ -74,7 +74,7 @@ class Steppers:
                 else:
                     print("Action not allowed. Breaking loop")
 
-                t.start()
+                #t.start()
 
             if self.next_action == self.action.ABORT:
                 break
