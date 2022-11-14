@@ -31,11 +31,15 @@ class Steppers:
 
     def go_forward(self):
 
+        self.action_active = True
+
         for i in range(16000):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
             GPIO.output(self.m1_step, GPIO.LOW)
             sleep(0.0001)
+
+        self.action_active = False
 
     def go_backward(self):
         print("Backward START")
@@ -58,6 +62,7 @@ class Steppers:
         while True:
 
             if self.action_active is False:
+
                 if self.next_action == self.action.FORWARD:
                     t = Thread(target=self.go_forward)
                     t.start()
