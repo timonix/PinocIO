@@ -1,27 +1,26 @@
 import sshkeyboard
 from sshkeyboard import listen_keyboard
 from threading import Thread
-import motor_control
+import stepper_control
 from time import sleep
 
-robot = motor_control.Movement()
+robot = stepper_control.Steppers()
 
 
 def press(key):
     print(f"'{key}' pressed")
-    robot.action = key
 
-    if key == 'q':
-        sshkeyboard.stop_listening()        # Shutdown is here to make check_action have a chance to shut itself down
-
-#    if key == 'w':
-#        movement.do_movement(movement='forward')
-#    elif key == 'a':
-#        movement.do_movement(movement='left')
-#    elif key == 's':
-#        movement.do_movement(movement='backward')
-#    elif key == 'd':
-#        movement.do_movement(movement='right')
+    if key == "w":
+        robot.next_action = robot.action.FORWARD
+    elif key == "s":
+        robot.next_action = robot.action.BACKWARD
+    elif key == "a":
+        robot.next_action = robot.action.TURN_LEFT
+    elif key == "d":
+        robot.next_action = robot.action.TURN_RIGHT
+    elif key == 'q':
+        robot.next_action = robot.action.ABORT
+        sshkeyboard.stop_listening()  # Shutdown is here to make check_action have a chance to shut itself down
 
 
 def release(key):
@@ -32,7 +31,7 @@ if __name__ == "__main__":
 
     print("Start of manual control \n Use WASD to control the robot, press q to abort")
 
-    t_check_input = Thread(target=robot.check_input)
+    t_check_input = Thread(target=robot.check_action)
     t_check_input.start()
 
     # Listen for inputs

@@ -1,19 +1,23 @@
 from threading import Thread
 from time import sleep
 import RPi.GPIO as GPIO
+from enum import Enum
 
 
-class Movement:
+class Steppers:
 
-    action = ''
+    next_action = ''
+    action_active = False
 
     m1_en = 24
     m1_step = 14
     m1_dir = 15
 
-    t_check_input = None
+    action = Enum('action', 'FORWARD BACKWARD TURN_LEFT TURN_RIGHT ABORT')
 
-    success_flag = False        # Used to make the other processes aware of complete action?
+    t_check_action = None
+
+    # success_flag = False        # Used to make the other processes aware of complete action?
 
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -27,9 +31,7 @@ class Movement:
 
     def go_forward(self):
 
-        print("going forward")
-
-        for i in range(1600):
+        for i in range(16000):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
             GPIO.output(self.m1_step, GPIO.LOW)
@@ -50,26 +52,31 @@ class Movement:
         sleep(3)
         print("Turning left STOP")
 
-    def check_input(self):  # Made to loop in a separate thread to monitor action and send to movement controller
+    def check_action(self):  # Made to loop in a separate thread to monitor action and send to movement controller
         print("Starting check input loop")
+
         while True:
 
-            if self.action == 'w':
-                self.do_movement(movement='forward')
-                sleep(3)
-            elif self.action == 'a':
-                self.do_movement(movement='left')
-                sleep(3)
-            elif self.action == 's':
-                self.do_movement(movement='backward')
-                sleep(3)
-            elif self.action == 'd':
-                self.do_movement(movement='right')
-                sleep(3)
-            elif self.action == 'q':
-                break
+            if self.action_active is False:
+                if self.next_action == self.action.FORWARD:
+                    t = Thread(target=self.go_forward)
+                    t.start()
+                elif self.next_action == self.action.BACKWARD:
+                    t = Thread(target=self.go_backward)
+                    t.start()
+                elif self.next_action == self.action.TURN_LEFT:
+                    t = Thread(target=self.turn_left)
+                    t.start()
+                elif self.next_action == self.action.TURN_RIGHT:
+                    t = Thread(target=self.turn_right)
+                    t.start()
+                elif self.next_action == self.action.ABORT:
+                    break
 
     def do_movement(self, movement):
+
+        self.action_active = True
+        print("before movement")
 
         if movement == 'forward':
             t = Thread(target=self.go_forward)
@@ -84,6 +91,8 @@ class Movement:
             t = Thread(target=self.turn_left)
             t.start()
 
+        self.action_active = False
+        print("after movement")
 
 
 
