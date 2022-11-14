@@ -15,6 +15,11 @@ installs libs into environment
 3. Run install_requirements.sh
 4. Do the rest
 
+## Pinout
+M1 Enable = GPIO14
+M1 Step = GPIO15
+M1 Direction = GPIO18
+
 # TODO
 
 - Make pytorch work on both PC and Pi

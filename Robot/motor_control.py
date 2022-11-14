@@ -1,24 +1,36 @@
 from threading import Thread
 from time import sleep
+import RPi.GPIO as GPIO
 
 
 class Movement:
 
     action = ''
 
+    m1_en = 14
+    m1_step = 15
+    m1_dir = 18
+
     t_check_input = None
 
     success_flag = False        # Used to make the other processes aware of complete action?
 
-    def __int__(self):
-        #t_check_input = Thread(target=self.check_input)
-        #t_check_input.start()
-        pass
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.m1_en, GPIO.OUT)
+        GPIO.setup(self.m1_step, GPIO.OUT)
+        GPIO.setup(self.m1_dir, GPIO.OUT)
+
+        GPIO.output(self.m1_en, GPIO.LOW)
+        GPIO.output(self.m1_step, GPIO.LOW)
+        GPIO.output(self.m1_dir, GPIO.LOW)
 
     def go_forward(self):
-        print("Forward START")
-        sleep(3)
-        print("Forward STOP")
+        for i in range(1600):
+            GPIO.output(self.step, GPIO.HIGH)
+            sleep(0.0001)
+            GPIO.output(self.step, GPIO.LOW)
+            sleep(0.0001)
 
     def go_backward(self):
         print("Backward START")
