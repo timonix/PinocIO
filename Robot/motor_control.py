@@ -7,9 +7,9 @@ class Movement:
 
     action = ''
 
-    m1_en = 14
-    m1_step = 15
-    m1_dir = 18
+    m1_en = 24
+    m1_step = 14
+    m1_dir = 15
 
     t_check_input = None
 
@@ -26,6 +26,7 @@ class Movement:
         GPIO.output(self.m1_dir, GPIO.LOW)
 
     def go_forward(self):
+
         for i in range(1600):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
