@@ -1,11 +1,11 @@
 import sshkeyboard
 from sshkeyboard import listen_keyboard
 from threading import Thread
-import stepper_control
+import robot_control
 import RPi.GPIO as GPIO
 from time import sleep
 
-robot = stepper_control.Steppers()
+robot = robot_control.RobotControl()
 
 
 def press(key):
@@ -32,8 +32,8 @@ if __name__ == "__main__":
 
     print("Start of manual control \n Use WASD to control the robot, press q to abort")
 
-    t_check_input = Thread(target=robot.check_action)
-    t_check_input.start()
+    #t_check_input = Thread(target=robot.check_action)
+    #t_check_input.start()
 
     # Listen for inputs
     listen_keyboard(
