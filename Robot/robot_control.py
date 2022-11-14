@@ -31,8 +31,14 @@ class RobotControl:
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
 
+    def stepper_control(self, motor, steps):
+        pass    # TODO
+
+    def angle_to_steps_calculation(self, angle):
+        pass    # TODO
+
     def go_forward(self):
-        for i in range(1600):
+        for i in range(200):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
             GPIO.output(self.m1_step, GPIO.LOW)
