@@ -24,7 +24,7 @@ def press(key):
 
 
 def release(key):
-    robot.action = ''
+    robot.next_action = ''
 
 
 if __name__ == "__main__":
