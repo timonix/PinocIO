@@ -33,7 +33,7 @@ class Steppers:
 
         self.action_active = True
 
-        for i in range(16000):
+        for i in range(1600):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
             GPIO.output(self.m1_step, GPIO.LOW)
@@ -64,9 +64,9 @@ class Steppers:
             if self.action_active is False and self.next_action is not '':
                 print("Doing action")
                 if self.next_action == self.action.FORWARD:
-                    t = Thread(target=self.go_forward)
+                    self.go_forward()
                 elif self.next_action == self.action.BACKWARD:
-                    t = Thread(target=self.go_backward)
+                    self.go_backward()
                 elif self.next_action == self.action.TURN_LEFT:
                     t = Thread(target=self.turn_left)
                 elif self.next_action == self.action.TURN_RIGHT:
