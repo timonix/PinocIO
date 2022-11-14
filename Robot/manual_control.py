@@ -2,6 +2,7 @@ import sshkeyboard
 from sshkeyboard import listen_keyboard
 from threading import Thread
 import stepper_control
+import RPi.GPIO as GPIO
 from time import sleep
 
 robot = stepper_control.Steppers()
@@ -40,6 +41,8 @@ if __name__ == "__main__":
         on_release=release,
         # until='q',              # Abort when q is pressed
     )
+
+    GPIO.cleanup()
 
     print("Program aborted. Shutting down. Good day.")
 

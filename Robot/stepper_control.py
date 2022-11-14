@@ -61,22 +61,23 @@ class Steppers:
 
         while True:
 
-            if self.action_active is False:
-
+            if self.action_active is False and self.next_action is not '':
+                print("Doing action")
                 if self.next_action == self.action.FORWARD:
                     t = Thread(target=self.go_forward)
-                    t.start()
                 elif self.next_action == self.action.BACKWARD:
                     t = Thread(target=self.go_backward)
-                    t.start()
                 elif self.next_action == self.action.TURN_LEFT:
                     t = Thread(target=self.turn_left)
-                    t.start()
                 elif self.next_action == self.action.TURN_RIGHT:
                     t = Thread(target=self.turn_right)
-                    t.start()
-                elif self.next_action == self.action.ABORT:
-                    break
+                else:
+                    print("Action not allowed. Breaking loop")
+
+                t.start()
+
+            if self.next_action == self.action.ABORT:
+                break
 
     def do_movement(self, movement):
 
