@@ -27,6 +27,8 @@ class Movement:
 
     def go_forward(self):
 
+        print("going forward")
+
         for i in range(1600):
             GPIO.output(self.m1_step, GPIO.HIGH)
             sleep(0.0001)
@@ -49,7 +51,7 @@ class Movement:
         print("Turning left STOP")
 
     def check_input(self):  # Made to loop in a separate thread to monitor action and send to movement controller
-
+        print("Starting check input loop")
         while True:
 
             if self.action == 'w':
