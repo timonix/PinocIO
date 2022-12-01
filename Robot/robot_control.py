@@ -58,6 +58,7 @@ class RobotControl:
 
         for a in range(180):
             self.servo.ChangeDutyCycle(self.deg_to_duty(a))
+            sleep(0.02)
 
     def servo_look_down(self, value):
         self.servo.value = max(self.servo.value - value, -1)
