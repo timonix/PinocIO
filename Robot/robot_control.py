@@ -11,8 +11,10 @@ class RobotControl:
     next_action = ''
     action_active = False
 
-    servo = Servo(17)
-    servo_value = 0
+    #servo = Servo(17)
+
+    servo = None
+    servoPIN = 11
 
     m1_en = 24
     m1_step = 14
@@ -36,13 +38,33 @@ class RobotControl:
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
 
-        self.servo.value = self.servo_value
+        #self.servo.value = 0
+
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.servoPIN, GPIO.OUT)
+
+        self.servo = GPIO.PWM(self.servoPIN, 50)  # GPIO 17 for PWM with 50Hz
+        self.servo.start(2.5)  # Initialization
 
     def servo_look_up(self, value):
-        self.servo.value = min(self.servo.value + value, 1)
+        #self.servo.value = min(self.servo.value + value, 1)
+        #sleep(0.5)
+        self.servo.ChangeDutyCycle(5)
+        sleep(1)
+        self.servo.ChangeDutyCycle(4)
+        sleep(1)
+        self.servo.ChangeDutyCycle(3)
+        sleep(1)
+        self.servo.ChangeDutyCycle(2)
+        sleep(1)
+        self.servo.ChangeDutyCycle(1)
+        sleep(1)
+        self.servo.ChangeDutyCycle(0)
+        sleep(1)
 
     def servo_look_down(self, value):
         self.servo.value = max(self.servo.value - value, -1)
+        sleep(0.5)
 
     def stepper_control(self, motor, steps):
         pass    # TODO
