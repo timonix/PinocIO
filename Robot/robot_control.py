@@ -11,6 +11,8 @@ class RobotControl:
     next_action = ''
     action_active = False
 
+    servo = Servo(17)
+
     m1_en = 24
     m1_step = 14
     m1_dir = 15
@@ -20,8 +22,6 @@ class RobotControl:
     action_loop_thread = None
 
     def __init__(self):
-
-        servo = Servo(17)
 
         self.action_loop_thread = Thread(target=self.check_action)
         self.action_loop_thread.start()
@@ -36,10 +36,10 @@ class RobotControl:
         GPIO.output(self.m1_dir, GPIO.LOW)
 
     def servo_look_up(self, value):
-        servo.value += value
+        self.servo.value += value
 
     def servo_look_down(self, value):
-        servo.value -= value
+        self.servo.value -= value
 
     def stepper_control(self, motor, steps):
         pass    # TODO
