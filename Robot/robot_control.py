@@ -2,7 +2,24 @@ from threading import Thread
 from time import sleep
 import RPi.GPIO as GPIO
 from enum import Enum
+from gpiozero import Servo
+from time import sleep
 
+
+while True:
+    try:
+        servo.value = -1
+        sleep(2)
+
+        for x in range(-1, 1, 0.1):
+            servo.value = -1
+            sleep(0.5)
+
+        sleep(2)
+    except KeyboardInterrupt:
+        print("Program stopped")
+        GPIO.cleanup()
+        exit()
 
 class RobotControl:
 
@@ -18,6 +35,8 @@ class RobotControl:
     action_loop_thread = None
 
     def __init__(self):
+
+        servo = Servo(17)
 
         self.action_loop_thread = Thread(target=self.check_action)
         self.action_loop_thread.start()
