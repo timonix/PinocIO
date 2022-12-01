@@ -15,6 +15,9 @@ class RobotControl:
 
     servo = None
     servoPIN = 17
+    MIN_DUTY = 5
+    MAX_DUTY = 10
+    servo_angle = 90
 
     m1_en = 24
     m1_step = 14
@@ -46,21 +49,15 @@ class RobotControl:
         self.servo = GPIO.PWM(self.servoPIN, 50)  # GPIO 17 for PWM with 50Hz
         self.servo.start(2.5)  # Initialization
 
+    def deg_to_duty(self, deg):
+        return (deg - 0) * (self.MAX_DUTY - self.MIN_DUTY) / 180 + self.MIN_DUTY
+
     def servo_look_up(self, value):
         #self.servo.value = min(self.servo.value + value, 1)
         #sleep(0.5)
-        self.servo.ChangeDutyCycle(5)
-        sleep(1)
-        self.servo.ChangeDutyCycle(4)
-        sleep(1)
-        self.servo.ChangeDutyCycle(3)
-        sleep(1)
-        self.servo.ChangeDutyCycle(2)
-        sleep(1)
-        self.servo.ChangeDutyCycle(1)
-        sleep(1)
-        self.servo.ChangeDutyCycle(0)
-        sleep(1)
+
+        for a in range(180):
+            self.servo.ChangeDutyCycle(self.deg_to_duty(a))
 
     def servo_look_down(self, value):
         self.servo.value = max(self.servo.value - value, -1)
