@@ -115,9 +115,9 @@ class RobotControl:
             elif self.next_action == self.action.TURN_RIGHT:
                 self.turn_right()
             elif self.next_action == self.action.LOOK_UP:
-                self.servo_look_up(0.1)
+                self.servo_look_up(10)
             elif self.next_action == self.action.LOOK_DOWN:
-                self.servo_look_down(0.1)
+                self.servo_look_down(10)
 
     def do_movement(self, movement):
 
