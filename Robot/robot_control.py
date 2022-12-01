@@ -14,7 +14,7 @@ class RobotControl:
     #servo = Servo(17)
 
     servo = None
-    servoPIN = 11
+    servoPIN = 17
 
     m1_en = 24
     m1_step = 14
