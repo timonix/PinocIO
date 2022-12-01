@@ -5,19 +5,6 @@ from enum import Enum
 from gpiozero import Servo
 from time import sleep
 
-servo = Servo(17)
-
-while True:
-    try:
-        for x in range(-100, 100, 10):
-            servo.value = x/100
-            sleep(0.5)
-        sleep(2)
-
-    except KeyboardInterrupt:
-        print("Program stopped")
-        GPIO.cleanup()
-        exit()
 
 class RobotControl:
 
@@ -28,7 +15,7 @@ class RobotControl:
     m1_step = 14
     m1_dir = 15
 
-    action = Enum('action', 'FORWARD BACKWARD TURN_LEFT TURN_RIGHT ABORT')
+    action = Enum('action', 'FORWARD BACKWARD TURN_LEFT TURN_RIGHT ABORT LOOK_UP LOOK_DOWN')
 
     action_loop_thread = None
 
@@ -47,6 +34,12 @@ class RobotControl:
         GPIO.output(self.m1_en, GPIO.LOW)
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
+
+    def servo_look_up(self, value):
+        servo.value += value
+
+    def servo_look_down(self, value):
+        servo.value -= value
 
     def stepper_control(self, motor, steps):
         pass    # TODO
@@ -93,6 +86,10 @@ class RobotControl:
                 self.turn_left()
             elif self.next_action == self.action.TURN_RIGHT:
                 self.turn_right()
+            elif self.next_action == self.action.LOOK_UP:
+                self.servo_look_up(0.1)
+            elif self.next_action == self.action.LOOK_DOWN:
+                self.servo_look_down(0.1)
 
     def do_movement(self, movement):
 

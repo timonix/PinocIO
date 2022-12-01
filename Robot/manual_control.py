@@ -19,6 +19,10 @@ def press(key):
         robot.next_action = robot.action.TURN_LEFT
     elif key == "d":
         robot.next_action = robot.action.TURN_RIGHT
+    elif key == 'i':
+        robot.next_action = robot.action.LOOK_UP
+    elif key == 'k':
+        robot.next_action = robot.action.LOOK_DOWN
     elif key == 'q':
         robot.next_action = robot.action.ABORT
         sshkeyboard.stop_listening()  # Shutdown is here to make check_action have a chance to shut itself down
