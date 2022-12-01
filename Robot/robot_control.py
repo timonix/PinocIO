@@ -12,6 +12,7 @@ class RobotControl:
     action_active = False
 
     servo = Servo(17)
+    servo_value = 0
 
     m1_en = 24
     m1_step = 14
@@ -35,11 +36,13 @@ class RobotControl:
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
 
+        self.servo.value = self.servo_value
+
     def servo_look_up(self, value):
-        self.servo.value += value
+        self.servo.value = min(self.servo.value + value, 1)
 
     def servo_look_down(self, value):
-        self.servo.value -= value
+        self.servo.value = max(self.servo.value - value, -1)
 
     def stepper_control(self, motor, steps):
         pass    # TODO
