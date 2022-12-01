@@ -10,3 +10,5 @@ vidgear
 
 gym-retro
 gym==0.21.0
+
+english_words

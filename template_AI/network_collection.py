@@ -1,8 +1,6 @@
 import torch
 from torch import nn
 
-import torch.nn.functional as F
-
 
 class RNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
@@ -126,7 +124,7 @@ class Decoder256(nn.Module):
         """
         super().__init__()
         if params is None:
-            params = [64, 64, 32, 32, 32, 32, 32, 32, 32, 32]
+            params = [64, 64, 32, 32, 32, 32, 32, 32, 32, 32, 32]
 
         self.linear = nn.Sequential(
             nn.Linear(latent_dim, 16 * params[0]),
@@ -148,17 +146,17 @@ class Decoder256(nn.Module):
             act_fn(),
             nn.Conv2d(params[5], params[6], kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(params[6], num_input_channels, kernel_size=3, output_padding=1, padding=1,stride=2),
+            nn.ConvTranspose2d(params[6], params[7], kernel_size=3, output_padding=1, padding=1,stride=2),
             # 32x32 => 64x64
             act_fn(),
-            nn.Conv2d(params[6], params[7], kernel_size=3, padding=1),
+            nn.Conv2d(params[7], params[8], kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(params[7], params[8], kernel_size=3, output_padding=1, padding=1,stride=2),
+            nn.ConvTranspose2d(params[8], params[9], kernel_size=3, output_padding=1, padding=1,stride=2),
             # 64x64 => 128x128
             act_fn(),
-            nn.Conv2d(params[8], params[9], kernel_size=3, padding=1),
+            nn.Conv2d(params[9], params[10], kernel_size=3, padding=1),
             act_fn(),
-            nn.ConvTranspose2d(params[9], num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
+            nn.ConvTranspose2d(params[10], num_input_channels, kernel_size=3, output_padding=1, padding=1, stride=2),
             # 128x128 => 256x256
 
             nn.Sigmoid()  # The input images is scaled between -1 and 1, hence the output has to be bounded as well
@@ -269,9 +267,9 @@ class Encoder(nn.Module):
         self.c_lin = nn.Linear(int(width * height * num_filters_layer_two / 4), latent_size)
 
     def forward(self, x):
-        x = F.relu(self.c1(x))
-        x = F.relu(self.c2(x))
-        x = F.relu(self.c_lin(x))
+        x = torch.relu(self.c1(x))
+        x = torch.relu(self.c2(x))
+        x = torch.relu(self.c_lin(x))
         return x
 
 
@@ -308,6 +306,6 @@ class FC(nn.Module):
         I recommend using nn.functional (F)
         """
 
-        x = F.sigmoid(self.fc1(x))
+        x = torch.sigmoid(self.fc1(x))
         x = self.fc2(x)
         return x
