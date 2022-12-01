@@ -52,16 +52,19 @@ class RobotControl:
     def deg_to_duty(self, deg):
         return (deg - 0) * (self.MAX_DUTY - self.MIN_DUTY) / 180 + self.MIN_DUTY
 
-    def servo_look_up(self, value):
+    def servo_look_up(self, angle):
         #self.servo.value = min(self.servo.value + value, 1)
         #sleep(0.5)
+        self.servo_angle = min(self.servo_angle + angle, 180)
+        self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
+        sleep(0.5)
 
-        for a in range(180):
-            self.servo.ChangeDutyCycle(self.deg_to_duty(a))
-            sleep(0.02)
+    def servo_look_down(self, angle):
+        #self.servo.value = max(self.servo.value - value, -1)
+        #sleep(0.5)
 
-    def servo_look_down(self, value):
-        self.servo.value = max(self.servo.value - value, -1)
+        self.servo_angle = max(self.servo_angle - angle, 0)
+        self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
         sleep(0.5)
 
     def stepper_control(self, motor, steps):
