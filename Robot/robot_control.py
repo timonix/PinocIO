@@ -56,6 +56,7 @@ class RobotControl:
         #self.servo.value = min(self.servo.value + value, 1)
         #sleep(0.5)
         self.servo_angle = min(self.servo_angle + angle, 180)
+        print(self.servo_angle)
         self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
         sleep(0.5)
 
@@ -64,6 +65,7 @@ class RobotControl:
         #sleep(0.5)
 
         self.servo_angle = max(self.servo_angle - angle, 0)
+        print(self.servo_angle)
         self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
         sleep(0.5)
 
