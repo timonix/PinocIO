@@ -11,13 +11,9 @@ class RobotControl:
     next_action = ''
     action_active = False
 
-    #servo = Servo(17)
-
-    servo = None
-    servoPIN = 17
-    MIN_DUTY = 5
-    MAX_DUTY = 10
-    servo_angle = 90
+    servo = Servo(17)
+    MIN_DUTY = -1
+    MAX_DUTY = 1
 
     m1_en = 24
     m1_step = 14
@@ -41,32 +37,17 @@ class RobotControl:
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
 
-        #self.servo.value = 0
-
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.servoPIN, GPIO.OUT)
-
-        self.servo = GPIO.PWM(self.servoPIN, 50)  # GPIO 17 for PWM with 50Hz
-        self.servo.start(2.5)  # Initialization
+        self.servo.value = self.deg_to_duty(45)
 
     def deg_to_duty(self, deg):
-        return (deg - 0) * (self.MAX_DUTY - self.MIN_DUTY) / 180 + self.MIN_DUTY
+        return (deg - 0) * (self.MAX_DUTY - self.MIN_DUTY) / 90 + self.MIN_DUTY
 
     def servo_look_up(self, angle):
-        #self.servo.value = min(self.servo.value + value, 1)
-        #sleep(0.5)
-        self.servo_angle = min(self.servo_angle + angle, 180)
-        print(self.servo_angle)
-        self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
+        self.servo.value = min(self.servo.value + angle, 1)
         sleep(0.5)
 
     def servo_look_down(self, angle):
-        #self.servo.value = max(self.servo.value - value, -1)
-        #sleep(0.5)
-
-        self.servo_angle = max(self.servo_angle - angle, 0)
-        print(self.servo_angle)
-        self.servo.ChangeDutyCycle(self.deg_to_duty(self.servo_angle))
+        self.servo.value = max(self.servo.value - angle, -1)
         sleep(0.5)
 
     def stepper_control(self, motor, steps):
