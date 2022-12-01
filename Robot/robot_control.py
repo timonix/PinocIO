@@ -9,7 +9,7 @@ servo = Servo(17)
 
 while True:
     try:
-        for x in range(-100, 100):
+        for x in range(-100, 100, 10):
             servo.value = x/100
             sleep(0.5)
         sleep(2)
