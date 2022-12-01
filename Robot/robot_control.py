@@ -9,14 +9,11 @@ servo = Servo(17)
 
 while True:
     try:
-        servo.value = -1
-        sleep(2)
-
-        for x in range(-1, 1, 0.1):
-            servo.value = -1
+        for x in range(-100, 100):
+            servo.value = x/100
             sleep(0.5)
-
         sleep(2)
+
     except KeyboardInterrupt:
         print("Program stopped")
         GPIO.cleanup()
