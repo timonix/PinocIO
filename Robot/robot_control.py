@@ -4,12 +4,20 @@ import RPi.GPIO as GPIO
 from enum import Enum
 from gpiozero import Servo
 from time import sleep
+import math
 
 
 class RobotControl:
 
+    # --- Class things ---
+
+    action = Enum('action', 'FORWARD BACKWARD TURN_LEFT TURN_RIGHT ABORT LOOK_UP LOOK_DOWN')
+
+    action_loop_thread = None
     next_action = ''
     action_active = False
+
+    # --- Servo things ---
 
     servo = Servo(17)
     MIN_DUTY = -1
@@ -18,13 +26,18 @@ class RobotControl:
     MAX_ANGLE = 90
     servo_angle = 45
 
+    # --- Stepper things ---
+    # m1 is the left motor, m2 is the right one
     m1_en = 24
     m1_step = 14
     m1_dir = 15
+    m2_en = 24
+    m2_step = 14
+    m2_dir = 15
 
-    action = Enum('action', 'FORWARD BACKWARD TURN_LEFT TURN_RIGHT ABORT LOOK_UP LOOK_DOWN')
-
-    action_loop_thread = None
+    wheel_diameter = 76     # Diameter if wheel in mm
+    steps_per_turn = 1600   # Steps needed to turn the wheel 360 degrees
+    wheels_distance = 176   # Distance between wheels in mm
 
     def __init__(self):
 
@@ -55,33 +68,54 @@ class RobotControl:
         self.servo.value = self.deg_to_duty(self.servo_angle)
         sleep(0.5)
 
-    def stepper_control(self, motor, steps):
-        pass    # TODO
+    def stepper_control(self, m1_steps, m2_steps):
 
-    def angle_to_steps_calculation(self, angle):
-        pass    # TODO
+        if m1_steps > 0:
+            GPIO.output(self.m1_dir, GPIO.HIGH)
+        else:
+            GPIO.output(self.m1_dir, GPIO.LOW)
 
-    def go_forward(self):
-        for i in range(200):
-            GPIO.output(self.m1_step, GPIO.HIGH)
+        if m2_steps > 0:
+            GPIO.output(self.m2_dir, GPIO.HIGH)
+        else:
+            GPIO.output(self.m2_dir, GPIO.LOW)
+
+        for step_count in range(max(m1_steps, m2_steps)):    # Step for at least the amount of steps from the stepper with most steps
+
+            if step_count > m1_steps:
+                GPIO.output(self.m1_step, GPIO.HIGH)
+            if step_count > m2_steps:
+                GPIO.output(self.m2_step, GPIO.HIGH)
+
             sleep(0.0001)
+
             GPIO.output(self.m1_step, GPIO.LOW)
+            GPIO.output(self.m2_step, GPIO.LOW)
+
             sleep(0.0001)
 
-    def go_backward(self):
-        print("Backward START")
-        sleep(3)
-        print("Backward STOP")
+    def angle_to_steps(self, angle):    # Steps needed to turn the robot a certain angle
+        turns = self.wheels_distance / self.wheel_diameter * (angle/360)
+        return self.steps_per_turn * turns
 
-    def turn_right(self):
-        print("Turning right START")
-        sleep(3)
-        print("Turning right STOP")
+    def distance_to_steps(self, distance):
+        rad = 2*distance/self.wheel_diameter
+        return self.steps_per_turn * rad / (2*math.pi)
 
-    def turn_left(self):
-        print("Turning left START")
-        sleep(3)
-        print("Turning left STOP")
+    def go_forward(self, distance):   # input distance in mm
+        steps = self.distance_to_steps(distance)
+        self.stepper_control(m1_steps=steps, m2_steps=steps)
+
+    def go_backward(self, distance):
+        steps = self.distance_to_steps(distance)
+        self.stepper_control(m1_steps=-steps, m2_steps=-steps)
+
+    def turn(self, angle):      # Angle in degrees
+        steps = self.angle_to_steps(angle)
+        if angle > 0:
+            self.stepper_control(m1_steps=steps, m2_steps=-steps)
+        else:
+            self.stepper_control(m1_steps=-steps, m2_steps=steps)
 
     def check_action(self):  # Made to loop in a separate thread to monitor and perform actions
         print("Starting stepper control loop thread.")
@@ -93,13 +127,13 @@ class RobotControl:
                 break
 
             if self.next_action == self.action.FORWARD:
-                self.go_forward()
+                self.go_forward(distance=100)
             elif self.next_action == self.action.BACKWARD:
-                self.go_backward()
+                self.go_backward(distance=100)
             elif self.next_action == self.action.TURN_LEFT:
-                self.turn_left()
+                self.turn(angle=45)
             elif self.next_action == self.action.TURN_RIGHT:
-                self.turn_right()
+                self.turn(angle=-45)
             elif self.next_action == self.action.LOOK_UP:
                 self.servo_look_up(10)
             elif self.next_action == self.action.LOOK_DOWN:
@@ -127,4 +161,7 @@ class RobotControl:
         print("after movement")
 
 
+if __name__ == '__main__':
+    robot = RobotControl()
 
+    print(robot.distance_to_steps(100))

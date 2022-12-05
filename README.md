@@ -1,26 +1,48 @@
-# PinocIO
+# ~~~~~~ PinocIO ~~~~~~
 
-## Windows
+## ---------- Windows -----------
 
+### Installation
 1. run install_enviroment.bat
 it will install and activate a virtual env
-
 2. run install_requirements.bat from inside your venv
 installs libs into environment
 
-## Raspberry Pi
+### Usage
+ssh pi@[ip address]
 
+## ---------- Raspberry Pi ----------
+
+### Installation
 1. Install virtual environment
 2. run command: source .venv/bin/activate
 3. Run install_requirements.sh
 4. Do the rest
 
-## Pinout
-M1 Enable = GPIO14
-M1 Step = GPIO15
-M1 Direction = GPIO18
+### Usage
+1. cd Pinocio
+2. source .venv/bin/activate
+3. 
 
-# TODO
+## ---------- Pinout ----------
+
+### Motors and servo
+M1 is left stepper, M2 is right.
+
+- M1 Enable = GPIO14 
+- M1 Step = GPIO15 
+- M1 Direction = GPIO18
+- M2 Enable = GPIO23 
+- M2 Step = GPIO24 
+- M2 Direction = GPIO25
+
+- Servo signal = GPIO17
+
+### GPIO Sound
+- GPIO 13 (pin33) to A+ 
+- GROUND to A-
+
+# ---------- TODO ---------- 
 
 - Make pytorch work on both PC and Pi
 - Train gameplay
