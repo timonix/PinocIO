@@ -29,12 +29,12 @@ ssh pi@[ip address]
 ### Motors and servo
 M1 is left stepper, M2 is right.
 
-- M1 Enable = GPIO14 
+- M1 & M2 Enable = GPIO14
 - M1 Step = GPIO15 
-- M1 Direction = GPIO18
-- M2 Enable = GPIO23 
-- M2 Step = GPIO24 
-- M2 Direction = GPIO25
+- M1 Direction = GPIO27
+- M2 Step = GPIO23 
+- M2 Direction = GPIO24
+
 
 - Servo signal = GPIO17
 

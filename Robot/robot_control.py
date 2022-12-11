@@ -28,12 +28,11 @@ class RobotControl:
 
     # --- Stepper things ---
     # m1 is the left motor, m2 is the right one
-    m1_en = 24
-    m1_step = 14
-    m1_dir = 15
-    m2_en = 24
-    m2_step = 14
-    m2_dir = 15
+    motors_enable = 14
+    m1_step = 15
+    m1_dir = 27
+    m2_step = 23
+    m2_dir = 24
 
     wheel_diameter = 76     # Diameter if wheel in mm
     steps_per_turn = 1600   # Steps needed to turn the wheel 360 degrees
