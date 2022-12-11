@@ -36,7 +36,7 @@ class RobotControl:
 
     wheel_diameter = 76     # Diameter if wheel in mm
     steps_per_turn = 1600   # Steps needed to turn the wheel 360 degrees
-    wheels_distance = 176   # Distance between wheels in mm
+    wheels_distance = 203   # Distance between wheels in mm
 
     def __init__(self):
 
@@ -47,6 +47,8 @@ class RobotControl:
         GPIO.setup(self.motors_enable, GPIO.OUT)
         GPIO.setup(self.m1_step, GPIO.OUT)
         GPIO.setup(self.m1_dir, GPIO.OUT)
+        GPIO.setup(self.m2_step, GPIO.OUT)
+        GPIO.setup(self.m2_dir, GPIO.OUT)
 
         GPIO.output(self.motors_enable, GPIO.LOW)
         GPIO.output(self.m1_step, GPIO.LOW)
