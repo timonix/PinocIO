@@ -4,9 +4,9 @@ from sshkeyboard import listen_keyboard
 import sshkeyboard
 
 
-en = 24
-step = 14
-dir = 15
+en = 14
+step = 15
+dir = 27
 
 print("Starting setup")
 
