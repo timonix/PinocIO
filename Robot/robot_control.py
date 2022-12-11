@@ -91,6 +91,38 @@ class RobotControl:
         m1_steps = abs(m1_steps)
         m2_steps = abs(m2_steps)
 
+        for i in range(m1_steps):
+            GPIO.output(self.m1_step, GPIO.HIGH)
+            sleep(0.001)
+            GPIO.output(self.m1_step, GPIO.LOW)
+            sleep(0.001)
+
+        for i in range(m2_steps):
+            GPIO.output(self.m2_step, GPIO.HIGH)
+            sleep(0.001)
+            GPIO.output(self.m2_step, GPIO.LOW)
+            sleep(0.001)
+
+    def stepper_control_old(self, m1_steps, m2_steps):
+
+        print("m1 steps: ")
+        print(m1_steps)
+        print("m2 steps: ")
+        print(m2_steps)
+
+        if m1_steps > 0:
+            GPIO.output(self.m1_dir, GPIO.HIGH)
+        else:
+            GPIO.output(self.m1_dir, GPIO.LOW)
+
+        if m2_steps > 0:
+            GPIO.output(self.m2_dir, GPIO.HIGH)
+        else:
+            GPIO.output(self.m2_dir, GPIO.LOW)
+
+        m1_steps = abs(m1_steps)
+        m2_steps = abs(m2_steps)
+
         for step_count in range(max(m1_steps, m2_steps)):
             # Step for at least the amount of steps from the stepper with most steps
 
