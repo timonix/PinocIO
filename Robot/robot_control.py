@@ -97,11 +97,11 @@ class RobotControl:
 
     def angle_to_steps(self, angle):    # Steps needed to turn the robot a certain angle
         turns = self.wheels_distance / self.wheel_diameter * (angle/360)
-        return self.steps_per_turn * turns
+        return int(self.steps_per_turn * turns)
 
     def distance_to_steps(self, distance):
         rad = 2*distance/self.wheel_diameter
-        return self.steps_per_turn * rad / (2*math.pi)
+        return int(self.steps_per_turn * rad / (2*math.pi))
 
     def go_forward(self, distance):   # input distance in mm
         steps = self.distance_to_steps(distance)
