@@ -91,15 +91,15 @@ class RobotControl:
         m1_steps = abs(m1_steps)
         m2_steps = abs(m2_steps)
 
-        for i in range(m1_steps):
+        for i in range(m1_steps):   # this assumes both motors will step an equal amount of times
             GPIO.output(self.m1_step, GPIO.HIGH)
             GPIO.output(self.m2_step, GPIO.HIGH)
-            sleep(0.001)
+            sleep(0.0001)
             GPIO.output(self.m2_step, GPIO.LOW)
             GPIO.output(self.m1_step, GPIO.LOW)
-            sleep(0.001)
+            sleep(0.0001)
 
-    def stepper_control_old(self, m1_steps, m2_steps):
+    def stepper_control_dynamic(self, m1_steps, m2_steps):  # not really working as of right now :(
 
         print("m1 steps: ")
         print(m1_steps)
