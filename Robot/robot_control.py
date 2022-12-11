@@ -103,6 +103,7 @@ class RobotControl:
             sleep(0.0001)
 
     def angle_to_steps(self, angle):    # Steps needed to turn the robot a certain angle
+        angle = abs(angle)     # make sure the angle is positive to make calculations correct
         turns = self.wheels_distance / self.wheel_diameter * (angle/360)
         return int(self.steps_per_turn * turns)
 
