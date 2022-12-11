@@ -35,7 +35,7 @@ class RobotControl:
     m2_dir = 24
 
     wheel_diameter = 76     # Diameter if wheel in mm
-    steps_per_turn = 1600   # Steps needed to turn the wheel 360 degrees
+    steps_per_turn = 3200   # Steps needed to turn the wheel 360 degrees
     wheels_distance = 203   # Distance between wheels in mm
 
     def __init__(self):
@@ -53,6 +53,8 @@ class RobotControl:
         GPIO.output(self.motors_enable, GPIO.LOW)
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
+        GPIO.output(self.m2_step, GPIO.LOW)
+        GPIO.output(self.m2_dir, GPIO.LOW)
 
         self.servo.value = self.deg_to_duty(45)
 
@@ -70,6 +72,9 @@ class RobotControl:
         sleep(0.5)
 
     def stepper_control(self, m1_steps, m2_steps):
+
+        print("m1 steps: " + m1_steps)
+        print("m2 steps: " + m2_steps)
 
         if m1_steps > 0:
             GPIO.output(self.m1_dir, GPIO.HIGH)
@@ -101,6 +106,7 @@ class RobotControl:
 
     def distance_to_steps(self, distance):
         rad = 2*distance/self.wheel_diameter
+        print("rad: " + rad)
         return int(self.steps_per_turn * rad / (2*math.pi))
 
     def go_forward(self, distance):   # input distance in mm
