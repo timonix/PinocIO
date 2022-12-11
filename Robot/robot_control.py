@@ -44,11 +44,11 @@ class RobotControl:
         self.action_loop_thread.start()
 
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.m1_en, GPIO.OUT)
+        GPIO.setup(self.motors_enable, GPIO.OUT)
         GPIO.setup(self.m1_step, GPIO.OUT)
         GPIO.setup(self.m1_dir, GPIO.OUT)
 
-        GPIO.output(self.m1_en, GPIO.LOW)
+        GPIO.output(self.motors_enable, GPIO.LOW)
         GPIO.output(self.m1_step, GPIO.LOW)
         GPIO.output(self.m1_dir, GPIO.LOW)
 
