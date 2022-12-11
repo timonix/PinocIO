@@ -171,4 +171,18 @@ class RobotControl:
 if __name__ == '__main__':
     robot = RobotControl()
 
-    print(robot.distance_to_steps(100))
+    robot.go_forward(100)
+
+    sleep(2)
+
+    robot.go_backward(100)
+
+    sleep(2)
+
+    robot.turn(90)
+
+    sleep(2)
+
+    robot.turn(-90)
+
+    pass
