@@ -73,8 +73,10 @@ class RobotControl:
 
     def stepper_control(self, m1_steps, m2_steps):
 
-        print("m1 steps: " + m1_steps)
-        print("m2 steps: " + m2_steps)
+        print("m1 steps: ")
+        print(m1_steps)
+        print("m2 steps: ")
+        print(m2_steps)
 
         if m1_steps > 0:
             GPIO.output(self.m1_dir, GPIO.HIGH)
@@ -106,7 +108,8 @@ class RobotControl:
 
     def distance_to_steps(self, distance):
         rad = 2*distance/self.wheel_diameter
-        print("rad: " + rad)
+        print("rad: ")
+        print(rad)
         return int(self.steps_per_turn * rad / (2*math.pi))
 
     def go_forward(self, distance):   # input distance in mm
