@@ -51,10 +51,10 @@ class RobotControl:
         GPIO.setup(self.m2_dir, GPIO.OUT)
 
         GPIO.output(self.motors_enable, GPIO.LOW)
-        GPIO.output(self.m1_step, GPIO.LOW)
-        GPIO.output(self.m1_dir, GPIO.LOW)
-        GPIO.output(self.m2_step, GPIO.LOW)
-        GPIO.output(self.m2_dir, GPIO.LOW)
+        #GPIO.output(self.m1_step, GPIO.LOW)
+        #GPIO.output(self.m1_dir, GPIO.LOW)
+        #GPIO.output(self.m2_step, GPIO.LOW)
+        #GPIO.output(self.m2_dir, GPIO.LOW)
 
         self.servo.value = self.deg_to_duty(45)
 
@@ -186,6 +186,6 @@ if __name__ == '__main__':
 
     robot.go_forward(100)
 
-    robot.turn(-90)
+    robot.turn(90)
 
     pass
