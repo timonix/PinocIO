@@ -73,10 +73,10 @@ class RobotControl:
 
     def stepper_control(self, m1_steps, m2_steps):
 
-        print("m1 steps: ")
-        print(m1_steps)
-        print("m2 steps: ")
-        print(m2_steps)
+        # print("m1 steps: ")
+        # print(m1_steps)
+        # print("m2 steps: ")
+        # print(m2_steps)
 
         if m1_steps > 0:
             GPIO.output(self.m1_dir, GPIO.HIGH)
@@ -153,13 +153,13 @@ class RobotControl:
 
     def turn(self, angle):      # Angle in degrees
         steps = self.angle_to_steps(angle)
-        print("turn angle and steps:")
-        print(angle)
-        print(steps)
+        # print("turn angle and steps:")
+        # print(angle)
+        # print(steps)
         if angle > 0:
-            self.stepper_control(m1_steps=steps, m2_steps=-steps)
-        else:
             self.stepper_control(m1_steps=-steps, m2_steps=steps)
+        else:
+            self.stepper_control(m1_steps=steps, m2_steps=-steps)
 
     def check_action(self):  # Made to loop in a separate thread to monitor and perform actions
         print("Starting stepper control loop thread.")
