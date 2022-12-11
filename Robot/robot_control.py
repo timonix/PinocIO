@@ -88,7 +88,11 @@ class RobotControl:
         else:
             GPIO.output(self.m2_dir, GPIO.LOW)
 
-        for step_count in range(max(m1_steps, m2_steps)):    # Step for at least the amount of steps from the stepper with most steps
+        m1_steps = abs(m1_steps)
+        m2_steps = abs(m2_steps)
+
+        for step_count in range(max(m1_steps, m2_steps)):
+            # Step for at least the amount of steps from the stepper with most steps
 
             if step_count > m1_steps:
                 GPIO.output(self.m1_step, GPIO.HIGH)
@@ -109,8 +113,6 @@ class RobotControl:
 
     def distance_to_steps(self, distance):
         rad = 2*distance/self.wheel_diameter
-        print("rad: ")
-        print(rad)
         return int(self.steps_per_turn * rad / (2*math.pi))
 
     def go_forward(self, distance):   # input distance in mm
@@ -123,6 +125,9 @@ class RobotControl:
 
     def turn(self, angle):      # Angle in degrees
         steps = self.angle_to_steps(angle)
+        print("turn angle and steps:")
+        print(angle)
+        print(steps)
         if angle > 0:
             self.stepper_control(m1_steps=steps, m2_steps=-steps)
         else:
@@ -175,17 +180,11 @@ class RobotControl:
 if __name__ == '__main__':
     robot = RobotControl()
 
+    robot.stepper_control(-2000, -2000)
+
+    sleep(2)
+
     robot.go_forward(100)
-
-    sleep(2)
-
-    robot.go_backward(100)
-
-    sleep(2)
-
-    robot.turn(90)
-
-    sleep(2)
 
     robot.turn(-90)
 
