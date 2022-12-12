@@ -4,9 +4,9 @@ from sshkeyboard import listen_keyboard
 import sshkeyboard
 
 
-en = 24
-step = 14
-dir = 15
+en = 14
+step = 15
+dir = 27
 
 print("Starting setup")
 
@@ -25,9 +25,14 @@ def press(key):
         print("stepping")
         for i in range(1600):
             GPIO.output(step, GPIO.HIGH)
-            sleep(0.0001)
+            sleep(0.001)
             GPIO.output(step, GPIO.LOW)
-            sleep(0.0001)
+            sleep(0.001)
+
+    if key == 'l':
+        GPIO.output(en, GPIO.LOW)
+    if key == 'h':
+        GPIO.output(en, GPIO.HIGH)
 
     if key == 'q':
         sshkeyboard.stop_listening()  # Shutdown is here to make check_action have a chance to shut itself down
