@@ -60,7 +60,6 @@ for i in range(5):
         core_input = None
         predicted_reward = None
 
-
         for i in tqdm(range(100000)):
 
             clean(image)
