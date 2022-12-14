@@ -4,9 +4,9 @@ from sshkeyboard import listen_keyboard
 import sshkeyboard
 
 
-en = 14
-step = 15
-dir = 27
+en = 25
+step = 23
+dir = 24
 
 print("Starting setup")
 
@@ -25,9 +25,9 @@ def press(key):
         print("stepping")
         for i in range(1600):
             GPIO.output(step, GPIO.HIGH)
-            sleep(0.001)
+            sleep(0.01)
             GPIO.output(step, GPIO.LOW)
-            sleep(0.001)
+            sleep(0.01)
 
     if key == 'l':
         GPIO.output(en, GPIO.LOW)

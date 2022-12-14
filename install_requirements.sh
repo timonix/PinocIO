@@ -19,3 +19,4 @@ pip3 install /home/pi/Documents/torch-1.0.0a0+8322165-cp37-cp37m-linux_armv7l.wh
 
 pip3 install RPi.GPIO
 pip3 install gpiozero
+pip install TMC-2209-Raspberry-Pi
