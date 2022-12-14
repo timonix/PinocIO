@@ -93,7 +93,7 @@ for session_name in tqdm(multi_sess):
         next_image = torch.reshape(next_image, (1, next_image.shape[0], next_image.shape[1], next_image.shape[2]))
         next_latent = encoder(next_image).detach()
 
-        actual_reward = torch.tensor([[item[1]]])
+        actual_reward = torch.tensor([[item[1]]]).to(device)
 
         step_facit = torch.cat((next_latent, actual_reward), dim=1).float()
 
