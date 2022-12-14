@@ -5,6 +5,7 @@ pyboy
 tqdm
 matplotlib
 opencv-python==4.5.1.48
+natsort
 
 yt_dlp
 vidgear

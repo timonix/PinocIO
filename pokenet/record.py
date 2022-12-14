@@ -16,6 +16,10 @@ import settings
 from tqdm import tqdm
 from pokenet import encoder, core_net, decoder
 
+encoder = encoder.to("cpu")
+decoder = decoder.to("cpu")
+core_net = core_net.to("cpu")
+
 from english_words import english_words_lower_alpha_set
 
 wordList = list(english_words_lower_alpha_set)

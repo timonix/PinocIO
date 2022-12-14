@@ -30,9 +30,11 @@ class PokeImages(Dataset):
         all_sessions = [x for x in p.iterdir() if x.is_dir()]
 
         self.files = []
+
         for session in all_sessions:
             session_path = os.path.join(session, Path("images/"))
-            session_files = [join(session_path, f) for f in listdir(session_path) if f.endswith(".png") and isfile(join(session_path, f))]
+            session_files = [join(session_path, f) for f in listdir(session_path) if
+                             f.endswith(".png") and isfile(join(session_path, f))]
             session_files = natsorted(session_files, key=lambda y: y.lower())
             self.files = self.files + session_files
 
@@ -58,7 +60,7 @@ if __name__ == "__main__":
 
     for epoch in range(num_epochs):
         for batch in tqdm(training_generator):
-            batch.to(device)
+            batch = batch.to(device)
 
             latent_space = encoder(batch)
             output = decoder(latent_space)
