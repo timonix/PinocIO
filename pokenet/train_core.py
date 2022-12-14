@@ -57,7 +57,7 @@ def all_sessions():
     random.shuffle(ss)
     return ss
 
-action_matrix = torch.eye(len(ACTIONS))
+action_matrix = torch.eye(len(ACTIONS)).to(device)
 
 item = None
 next_item = None
@@ -67,7 +67,7 @@ multi_sess = []
 for i in range(50):
     multi_sess += all_sessions()
 for session_name in tqdm(multi_sess):
-    world = torch.zeros((1, WORLD_SIZE))
+    world = torch.zeros((1, WORLD_SIZE)).to(device)
     item = None
     next_item = None
     loss = None
