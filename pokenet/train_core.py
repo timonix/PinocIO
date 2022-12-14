@@ -15,6 +15,7 @@ import random
 
 import pickle
 
+import pokenet.pokenet
 from pokenet import ACTIONS, WORLD_SIZE, IMAGE_SIZE, REWARD_SIZE, encoder, core_net, save_core
 
 core_net_optimizer = Adam(core_net.parameters(), lr=0.0001, weight_decay=0.0001)
@@ -78,7 +79,7 @@ for session_name in tqdm(multi_sess):
         if item is None:
             continue
 
-        tensor_image = item[0] / 255.0
+        tensor_image = item[0].to(pokenet.pokenet.device) / 255.0
         tensor_image = torch.reshape(tensor_image, (1, tensor_image.shape[0], tensor_image.shape[1], tensor_image.shape[2]))
         latent = encoder(tensor_image).detach()
         action = action_matrix[item[2]]
