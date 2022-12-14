@@ -61,7 +61,7 @@ for i in range(5):
         predicted_reward = None
 
 
-        for i in tqdm(range(40000)):
+        for i in tqdm(range(100000)):
 
             clean(image)
             image = pyboy.screen_image()
