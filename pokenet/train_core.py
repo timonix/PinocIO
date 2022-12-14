@@ -80,7 +80,7 @@ for session_name in tqdm(multi_sess):
 
         tensor_image = item[0] / 255.0
         tensor_image = torch.reshape(tensor_image, (1, tensor_image.shape[0], tensor_image.shape[1], tensor_image.shape[2]))
-        latent = torch.tensor(encoder(tensor_image).detach().numpy())
+        latent = encoder(tensor_image).detach()
         action = action_matrix[item[2]]
         action = torch.reshape(action, (1, action.shape[0]))
 
