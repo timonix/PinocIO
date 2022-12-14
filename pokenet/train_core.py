@@ -89,9 +89,9 @@ for session_name in tqdm(multi_sess):
         core = core_net(core_input)
         world, predicted_latent, predicted_reward = core.split([WORLD_SIZE, IMAGE_SIZE, REWARD_SIZE], dim=1)
 
-        next_image = next_item[0] / 255.0
+        next_image = next_item[0].to(device) / 255.0
         next_image = torch.reshape(next_image, (1, next_image.shape[0], next_image.shape[1], next_image.shape[2]))
-        next_latent = torch.tensor(encoder(next_image).detach().numpy())
+        next_latent = encoder(next_image).detach()
 
         actual_reward = torch.tensor([[item[1]]])
 
