@@ -58,7 +58,7 @@ def all_sessions():
         d = os.path.join(settings.DATA_PATH, file)
 
         if os.path.isdir(d):
-            print(d)
+            print(file)
             listdir.append(d)
     random.shuffle(listdir)
     return listdir
