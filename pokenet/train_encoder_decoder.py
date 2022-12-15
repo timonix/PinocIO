@@ -52,7 +52,7 @@ subEpochs = 5
 if __name__ == "__main__":
     print("Loading data00")
     data = PokeImages(settings.DATA_PATH)
-    training_generator = DataLoader(data, batch_size=1000, shuffle=True)
+    training_generator = DataLoader(data, batch_size=750, shuffle=True)
 
     optimizer_en = optim.Adam(encoder.parameters(), lr=0.0001)
     optimizer_de = optim.Adam(decoder.parameters(), lr=0.0001)
