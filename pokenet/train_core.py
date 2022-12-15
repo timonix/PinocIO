@@ -53,9 +53,13 @@ class Session(Dataset):
 
 
 def all_sessions():
-    ss = os.listdir(settings.DATA_PATH)
-    random.shuffle(ss)
-    return ss
+    listdir = []
+    for file in os.listdir(settings.DATA_PATH):
+        d = os.path.join(settings.DATA_PATH, file)
+        if os.path.isdir(d):
+            listdir.append(d)
+
+    return random.shuffle(listdir)
 
 action_matrix = torch.eye(len(ACTIONS)).to(device)
 
