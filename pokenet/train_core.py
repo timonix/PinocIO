@@ -77,7 +77,7 @@ for session_name in tqdm(multi_sess):
     loss = None
     core_net_optimizer.zero_grad()
     sess = Session(settings.DATA_PATH, session_name)
-    for i in sess:
+    for i in tqdm(sess):
         item = next_item
         next_item = i
         if item is None:
