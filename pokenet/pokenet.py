@@ -29,13 +29,17 @@ REWARD_SIZE = 1
 MAGIC = (9, 10)
 MAGIC_NUMBER = MAGIC[0] * MAGIC[1]
 
-core_net = nn.Sequential(nn.Linear(NUM_ACTIONS + WORLD_SIZE + IMAGE_SIZE, HIDDEN_SIZE),
+core_net = nn.Sequential(nn.Linear(NUM_ACTIONS + WORLD_SIZE + IMAGE_SIZE, HIDDEN_SIZE*2),
+                         nn.ReLU(),
+                         nn.Linear(HIDDEN_SIZE*2, HIDDEN_SIZE),
                          nn.ReLU(),
                          nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
                          nn.ReLU(),
                          nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
                          nn.ReLU(),
-                         nn.Linear(HIDDEN_SIZE, WORLD_SIZE + REWARD_SIZE + IMAGE_SIZE),
+                         nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE*2),
+                         nn.ReLU(),
+                         nn.Linear(HIDDEN_SIZE*2, WORLD_SIZE + REWARD_SIZE + IMAGE_SIZE),
                          nn.Sigmoid()).to(device)
 
 encoder = nn.Sequential(

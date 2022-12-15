@@ -48,6 +48,7 @@ class PokeImages(Dataset):
 
 
 num_epochs = 50
+subEpochs = 5
 if __name__ == "__main__":
     print("Loading data00")
     data = PokeImages(settings.DATA_PATH)
@@ -61,18 +62,18 @@ if __name__ == "__main__":
     for epoch in range(num_epochs):
         for batch in tqdm(training_generator):
             batch = batch.to(device)
+            for i in range(subEpochs):
+                latent_space = encoder(batch)
+                output = decoder(latent_space)
 
-            latent_space = encoder(batch)
-            output = decoder(latent_space)
+                loss = criterion(output, batch)
 
-            loss = criterion(output, batch)
+                optimizer_de.zero_grad()
+                optimizer_en.zero_grad()
+                loss.backward()
 
-            optimizer_de.zero_grad()
-            optimizer_en.zero_grad()
-            loss.backward()
-
-            optimizer_en.step()
-            optimizer_de.step()
+                optimizer_en.step()
+                optimizer_de.step()
 
         print(f"Loss: {loss.item():.8f}")
         pokenet.save_decoder()
