@@ -58,7 +58,7 @@ def all_sessions():
         d = os.path.join(settings.DATA_PATH, file)
         if os.path.isdir(d):
             listdir.append(d)
-    listdir = random.shuffle(listdir)
+    random.shuffle(listdir)
     return listdir
 
 action_matrix = torch.eye(len(ACTIONS)).to(device)
