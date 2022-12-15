@@ -1,4 +1,6 @@
 import os
+from os.path import exists
+import shutil
 
 SHOW_IMAGES = False
 
@@ -35,12 +37,22 @@ def clean(obj):
     if obj != None:
         del(obj)
 
-for i in range(5):
+NUM_SESSIONS = 20
+for session_num in range(NUM_SESSIONS):
     with PyBoy('Pmon', disable_renderer=False) as pyboy:
         pyboy.set_emulation_speed(0)
         pyboy.send_input(WindowEvent.STATE_LOAD)
+        pyboy.tick()
+        pyboy.tick()
+        pyboy.send_input(WindowEvent.STATE_SAVE)
+        pyboy.tick()
+        pyboy.tick()
 
         world = torch.zeros(WORLD_SIZE)
+        if exists("Pmon.world"):
+            file = open("Pmon.world", 'rb')
+            world = pickle.load(file)
+            file.close()
 
         session_name = random.choice(wordList)
 
@@ -60,7 +72,7 @@ for i in range(5):
         core_input = None
         predicted_reward = None
 
-        for i in tqdm(range(100000)):
+        for i in tqdm(range(20_000)):
 
             clean(image)
             image = pyboy.screen_image()
@@ -126,11 +138,16 @@ for i in range(5):
             pyboy.tick()
             pyboy.tick()
 
-        pyboy.send_input(WindowEvent.STATE_SAVE)
-        pyboy.tick()
-        pyboy.tick()
-        pyboy.tick()
+        if session_num == NUM_SESSIONS-1:
+            pyboy.send_input(WindowEvent.STATE_SAVE)
+            pyboy.tick()
+            pyboy.tick()
+            pyboy.tick()
 
+        world_file = "Pmon.world"
+        file = open(world_file, 'wb')
+        pickle.dump(world, file)
+        file.close()
 
         reward_file = session_dir + "/" + session_name + ".prew"
         file = open(reward_file, 'wb')
@@ -141,3 +158,5 @@ for i in range(5):
         file = open(action_file, 'wb')
         pickle.dump(actions_all, file)
         file.close()
+
+        shutil.make_archive(session_dir, 'zip', session_dir)

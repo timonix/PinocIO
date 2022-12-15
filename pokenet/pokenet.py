@@ -10,7 +10,6 @@ import numpy as np
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
 ACTIONS = [(WindowEvent.PRESS_ARROW_DOWN, WindowEvent.RELEASE_ARROW_DOWN),
            (WindowEvent.PRESS_ARROW_UP, WindowEvent.RELEASE_ARROW_UP),
            (WindowEvent.PRESS_ARROW_LEFT, WindowEvent.RELEASE_ARROW_LEFT),
@@ -31,6 +30,8 @@ MAGIC = (9, 10)
 MAGIC_NUMBER = MAGIC[0] * MAGIC[1]
 
 core_net = nn.Sequential(nn.Linear(NUM_ACTIONS + WORLD_SIZE + IMAGE_SIZE, HIDDEN_SIZE),
+                         nn.ReLU(),
+                         nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
                          nn.ReLU(),
                          nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
                          nn.ReLU(),
@@ -78,13 +79,13 @@ decoder = nn.Sequential(  # large to small
 ).to(device)
 
 if exists(settings.MODEL_PATH + "encoder.m"):
-    encoder.load_state_dict(torch.load(settings.MODEL_PATH + "encoder.m"))
+    encoder.load_state_dict(torch.load(settings.MODEL_PATH + "encoder.m", map_location=device))
 
 if exists(settings.MODEL_PATH + "decoder.m"):
-    decoder.load_state_dict(torch.load(settings.MODEL_PATH + "decoder.m"))
+    decoder.load_state_dict(torch.load(settings.MODEL_PATH + "decoder.m", map_location=device))
 
 if exists(settings.MODEL_PATH + "core_net.m"):
-    core_net.load_state_dict(torch.load(settings.MODEL_PATH + "core_net.m"))
+    core_net.load_state_dict(torch.load(settings.MODEL_PATH + "core_net.m", map_location=device))
 
 
 def save_encoder():
