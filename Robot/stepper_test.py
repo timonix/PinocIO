@@ -25,9 +25,9 @@ def press(key):
         print("stepping")
         for i in range(1600):
             GPIO.output(step, GPIO.HIGH)
-            sleep(0.01)
+            sleep(0.0001)
             GPIO.output(step, GPIO.LOW)
-            sleep(0.01)
+            sleep(0.0001)
 
     if key == 'l':
         GPIO.output(en, GPIO.LOW)
