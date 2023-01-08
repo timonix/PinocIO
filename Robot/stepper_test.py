@@ -30,15 +30,32 @@ GPIO.output(dir2, GPIO.LOW)
 
 
 def press(key):
-    if key == 's':
-        print("stepping")
+    if key == 'a':
+        print("left stepping")
         for i in range(1600):
             GPIO.output(step1, GPIO.HIGH)
-            GPIO.output(step2, GPIO.HIGH)
             sleep(0.01)
             GPIO.output(step1, GPIO.LOW)
+            sleep(0.01)
+
+    if key == 'd':
+        print(" right stepping")
+        for i in range(1600):
+            GPIO.output(step2, GPIO.HIGH)
+            sleep(0.01)
             GPIO.output(step2, GPIO.LOW)
             sleep(0.01)
+
+    if key == 's':
+        print(" both stepping")
+        for i in range(1600):
+            GPIO.output(step2, GPIO.HIGH)
+            GPIO.output(step1, GPIO.HIGH)
+            sleep(0.01)
+            GPIO.output(step2, GPIO.LOW)
+            GPIO.output(step1, GPIO.LOW)
+            sleep(0.01)
+
 
 #    if key == 'l':
 #        GPIO.output(en, GPIO.LOW)
