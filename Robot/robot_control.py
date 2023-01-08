@@ -29,8 +29,8 @@ class RobotControl:
     # --- Stepper things ---
     # m1 is the left motor, m2 is the right one
     motors_enable = 14
-    m1_step = 15
-    m1_dir = 27
+    m1_step = 25
+    m1_dir = 8
     m2_step = 23
     m2_dir = 24
 
