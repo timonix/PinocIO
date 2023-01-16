@@ -9,7 +9,7 @@ robot = robot_control.RobotControl()
 
 
 def press(key):
-    print(f"'{key}' pressed")
+    #print(f"'{key}' pressed")
 
     if key == "w":
         robot.next_action = robot.action.FORWARD

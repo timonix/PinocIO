@@ -19,7 +19,7 @@ class RobotControl:
 
     # --- Servo things ---
 
-    servo = Servo(17)
+    servo = Servo(15)
     MIN_DUTY = -1
     MAX_DUTY = 1
     MIN_ANGLE = 0
