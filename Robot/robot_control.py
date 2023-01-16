@@ -62,12 +62,12 @@ class RobotControl:
         return (deg - self.MIN_ANGLE) * (self.MAX_DUTY - self.MIN_DUTY) / self.MAX_ANGLE + self.MIN_DUTY
 
     def servo_look_up(self, angle):
-        self.servo_angle = min(self.servo_angle + angle, self.MAX_ANGLE)
+        self.servo_angle = min(self.servo_angle - angle, self.MAX_ANGLE)
         self.servo.value = self.deg_to_duty(self.servo_angle)
         sleep(0.5)
 
     def servo_look_down(self, angle):
-        self.servo_angle = max(self.servo_angle - angle, self.MIN_ANGLE)
+        self.servo_angle = max(self.servo_angle + angle, self.MIN_ANGLE)
         self.servo.value = self.deg_to_duty(self.servo_angle)
         sleep(0.5)
 
