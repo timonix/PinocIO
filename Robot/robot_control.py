@@ -183,6 +183,11 @@ class RobotControl:
             elif self.next_action == self.action.LOOK_DOWN:
                 self.servo_look_down(10)
 
+            # robot.set_forward_distance(100)
+            # if robot.is_ready
+            #   robot.next_action = 'FORWARD'
+            #   robot.go()
+
     def do_movement(self, movement):
 
         self.action_active = True

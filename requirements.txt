@@ -11,3 +11,4 @@ yt_dlp
 vidgear
 
 english_words
+pyttsx3
