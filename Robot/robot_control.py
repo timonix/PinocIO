@@ -5,7 +5,9 @@ from enum import Enum
 from gpiozero import Servo
 from time import sleep
 import math
+from gpiozero.pins.pigpio import PiGPIOFactory
 
+gpiozero.Device.pin_factory = PiGPIOFactory('127.0.0.1')
 
 class RobotControl:
 
