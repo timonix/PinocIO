@@ -22,8 +22,8 @@ class RobotControl:
     servo = Servo(15)
     MIN_DUTY = -1
     MAX_DUTY = 1
-    MIN_ANGLE = 0
-    MAX_ANGLE = 90
+    MIN_ANGLE = 5
+    MAX_ANGLE = 65
     servo_angle = 45
 
     # --- Stepper things ---
@@ -63,12 +63,12 @@ class RobotControl:
 
     def servo_look_up(self, angle):
         self.servo_angle = min(self.servo_angle - angle, self.MAX_ANGLE)
-        self.servo.value = self.deg_to_duty(self.servo_angle)
+        self.servo.value = min(self.deg_to_duty(self.servo_angle), 0)
         sleep(0.5)
 
     def servo_look_down(self, angle):
         self.servo_angle = max(self.servo_angle + angle, self.MIN_ANGLE)
-        self.servo.value = self.deg_to_duty(self.servo_angle)
+        self.servo.value = max(self.deg_to_duty(self.servo_angle), 1)
         sleep(0.5)
 
     def stepper_control(self, m1_steps, m2_steps):
